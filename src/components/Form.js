@@ -6,8 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import {Actions} from 'react-native-router-flux';
 
 export default class Form extends Component {
+  map() {
+    Actions.map();
+  }
   render() {
     return (
       <View>
@@ -30,7 +34,8 @@ export default class Form extends Component {
         />
         <TouchableOpacity
           style={styles.button}
-          onPress={this.props.onAuthButtonPress}>
+          //onPress={this.props.onAuthButtonPress}>
+          onPress={this.map}>
           <Text style={styles.buttonText}>{this.props.type}</Text>
         </TouchableOpacity>
       </View>
