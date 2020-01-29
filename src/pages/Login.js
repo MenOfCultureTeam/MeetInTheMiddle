@@ -5,6 +5,8 @@ import {
   View,
   StatusBar,
   TouchableOpacity,
+  ImageBackground,
+  Dimensions
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Logo from '../components/Logo';
@@ -17,21 +19,29 @@ export default class Login extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Logo />
-        <Form type="Login" />
-        <View style={styles.signupTextCont}>
-          <Text style={styles.signupText}>Don't have an account yet? </Text>
-          <TouchableOpacity onPress={this.signup}>
-            <Text style={styles.signupButton}>Signup</Text>
-          </TouchableOpacity>
+
+
+      <ImageBackground source={require('../images/road.png')} style={styles.backgroundImage}>
+
+        <View style={styles.rectangle}>      
+          <Logo />
+          <Form type="Login" />
+            <View style={styles.signupTextCont}>
+              <Text style={styles.signupText}>New User? </Text>
+              <TouchableOpacity onPress={this.signup}>
+                <Text style={styles.signupButton}>Click here to Signup</Text>
+              </TouchableOpacity>
+              </View>
         </View>
-      </View>
+
+      </ImageBackground>
+
     );
   }
 }
 
 const styles = StyleSheet.create({
+
   container: {
     backgroundColor: '#191816',
     flex: 1,
@@ -50,8 +60,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   signupButton: {
-    color: '#ffffff',
+    color: '#FF6201',
     fontSize: 16,
     fontWeight: '500',
   },
+  rectangle: {
+    justifyContent: "center",
+    flex:2,
+    height: 550,
+    width: 350,
+    alignItems: "center",
+    backgroundColor: '#403E3F',
+    position: "absolute",
+    alignSelf: "center",
+    top: 75,
+    borderColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 1
+  },
+  backgroundImage:{
+    width:"100%", 
+    height:"100%", 
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  }
 });
