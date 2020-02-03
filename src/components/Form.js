@@ -7,12 +7,13 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
 
 export default class Form extends Component {
-  map() {
-    Actions.map();
-  }
+  state = {username: '', email: '', password: '', errorMessage: null};
+  handleSignUp = () => {
+    // TODO: Firebase stuff...
+    console.log('handleSignUp');
+  };
   render() {
     const forumType = this.props.type;
     return (
@@ -24,7 +25,9 @@ export default class Form extends Component {
           placeholderTextColor="#C0C0C0"
           selectionColor="#fff"
           keyboardType="default"
-          onSubmitEditing={() => this.password.focus()}
+          // onSubmitEditing={() => this.password.focus()}
+          onChangeText={password => this.setState({username})}
+          value={this.state.username}
         />
         {forumType == 'Signup' ? (
           <TextInput
@@ -34,7 +37,9 @@ export default class Form extends Component {
             secureTextEntry={false}
             placeholderTextColor="#C0C0C0"
             keyboardType="email-address"
-            onSubmitEditing={() => this.password.focus()}
+            onChangeText={email => this.setState({email})}
+            // onSubmitEditing={() => this.password.focus()}
+            value={this.state.email}
           />
         ) : null}
         <TextInput
@@ -43,15 +48,24 @@ export default class Form extends Component {
           placeholder="Password"
           secureTextEntry={true}
           placeholderTextColor="#C0C0C0"
-          ref={input => (this.password = input)}
+          // ref={input => (this.password = input)}
+          onChangeText={password => this.setState({password})}
+          value={this.state.password}
         />
 
-        <TouchableOpacity
-          style={styles.button}
-          //onPress={this.props.onAuthButtonPress}>
-          onPress={this.map}>
-          <Text style={styles.buttonText}>{forumType}</Text>
-        </TouchableOpacity>
+        {forumType == 'Login' ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate('Map')}>
+            <Text style={styles.buttonText}>{forumType}</Text>
+          </TouchableOpacity>
+        ) : this.props.type == 'Signup' ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => this.props.navigation.navigate('Login')}>
+            <Text style={styles.buttonText}>{forumType}</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     );
   }

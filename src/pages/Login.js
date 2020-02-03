@@ -8,15 +8,11 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+
 import Logo from '../components/Logo';
 import Form from '../components/Form';
 
 export default class Login extends Component {
-  signup() {
-    Actions.signup();
-  }
-
   render() {
     return (
       <ImageBackground

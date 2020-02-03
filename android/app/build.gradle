@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-
+apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 import com.android.build.OutputFile
 
 /**
@@ -133,6 +133,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        minSdkVersion 16 
+        targetSdkVersion 27
+        multiDexEnabled true
+ 
     }
     splits {
         abi {
@@ -179,6 +183,9 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-firestore:21.3.1'
+    compile 'com.android.support:multidex:1.0.3' 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

@@ -8,13 +8,10 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+
 import Logo from '../components/Logo';
 import Form from '../components/Form';
 export default class Signup extends Component {
-  goBack() {
-    Actions.pop();
-  }
   render() {
     return (
       <ImageBackground
@@ -25,9 +22,9 @@ export default class Signup extends Component {
           <Form type="Signup" />
           <View style={styles.signupTextCont}>
             <Text style={styles.signupText}>Already have an account? </Text>
-            <TouchableOpacity onPress={this.goBack}>
-              <Text style={styles.signupButton}>Sign in</Text>
-            </TouchableOpacity>
+            {/* <TouchableOpacity onPress={this.goBack}> */}
+            <Text style={styles.signupButton}>Sign in</Text>
+            {/* </TouchableOpacity> */}
           </View>
         </View>
       </ImageBackground>
