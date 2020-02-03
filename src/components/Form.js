@@ -7,12 +7,49 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-
+import auth from '@react-native-firebase/auth';
+import { SwitchActions } from 'react-navigation';
 export default class Form extends Component {
   state = {username: '', email: '', password: '', errorMessage: null};
   handleSignUp = () => {
-    // TODO: Firebase stuff...
-    console.log('handleSignUp');
+     auth()
+    .createUserWithEmailAndPassword(this.state.email, this.state.password)
+    .then(() => this.props.navigation.navigate('Main'))
+    .catch(function(error){
+      // Handle Errors here.
+      var errorCode = error.code;
+      this.setState({errorMessage})
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      if (errorCode === 'auth/account-exists-with-different-credential') {
+        alert('Email already associated with another account.');
+        // Handle account linking here, if using.
+      } else {
+        console.error(error);
+      }
+    }); 
+  };
+  handleLogin = () => {
+      //  const { email, password } = this.state
+      //  auth()
+      // .signInWithEmailAndPassword(email, password)
+      // .catch(function(error){
+      //   // Handle Errors here.
+      //   var errorCode = error.code;
+      //   this.setState({errorMessage})
+      //   if (errorCode === 'auth/wrong-password') {
+      //     alert('Wrong password.');
+      //   } else {
+      //     alert(errorMessage);
+      //   }
+      //   console.log(error);
+      // });
+
+      SwitchActions.jumpTo('Main');
+
+       
   };
   render() {
     const forumType = this.props.type;
@@ -21,25 +58,25 @@ export default class Form extends Component {
         <TextInput
           style={styles.inputBox}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Username"
+          placeholder="Email"
           placeholderTextColor="#C0C0C0"
           selectionColor="#fff"
-          keyboardType="default"
+          keyboardType="email-address"
           // onSubmitEditing={() => this.password.focus()}
-          onChangeText={password => this.setState({username})}
-          value={this.state.username}
+          onChangeText={email => this.setState({email})}
+          value={this.state.email}
         />
         {forumType == 'Signup' ? (
           <TextInput
             style={styles.inputBox}
             underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Email"
+            placeholder="Username"
             secureTextEntry={false}
             placeholderTextColor="#C0C0C0"
             keyboardType="email-address"
-            onChangeText={email => this.setState({email})}
+            //onChangeText={email => this.setState({email})}
             // onSubmitEditing={() => this.password.focus()}
-            value={this.state.email}
+            //value={this.state.email}
           />
         ) : null}
         <TextInput
@@ -56,13 +93,13 @@ export default class Form extends Component {
         {forumType == 'Login' ? (
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('Map')}>
+            onPress={this.handleLogin}>
             <Text style={styles.buttonText}>{forumType}</Text>
           </TouchableOpacity>
         ) : this.props.type == 'Signup' ? (
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.props.navigation.navigate('Login')}>
+            onPress={this.handleSignUp}>
             <Text style={styles.buttonText}>{forumType}</Text>
           </TouchableOpacity>
         ) : null}
