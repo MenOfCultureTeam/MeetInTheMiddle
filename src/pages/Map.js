@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import {logoutUser} from '../api/auth-api';
+
 export default class Map extends Component {
   render() {
     return (
@@ -28,6 +30,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+
   map: {
     // ...StyleSheet.absoluteFillObject,
     position: 'absolute',

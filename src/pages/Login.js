@@ -3,27 +3,93 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar,
+  TextInput,
   TouchableOpacity,
   ImageBackground,
   Dimensions,
 } from 'react-native';
-
+import {emailValidator, passwordValidator} from '../core/utils';
+import {loginUser} from '../api/auth-api';
 import Logo from '../components/Logo';
-import Form from '../components/Form';
-
 export default class Login extends Component {
+  state = {email: '', password: '', loading: false, error: ''};
   render() {
+    const _onLoginPressed = async () => {
+      if (this.state.loading) return;
+
+      const emailError = emailValidator(this.state.email);
+      const passwordError = passwordValidator(this.state.password);
+
+      if (emailError || passwordError) {
+        if (emailError) {
+          this.state.error = emailError;
+        } else {
+          this.state.error = passwordError;
+        }
+        console.log(this.state.error);
+        return;
+      }
+      this.state.loading = true;
+      // setLoading(true);
+
+      const response = await loginUser({
+        email: this.state.email,
+        password: this.state.password,
+      });
+
+      if (response.error) {
+        this.state.error = response.error;
+      }
+      this.state.loading = false;
+      // setLoading(false);
+    };
     return (
       <ImageBackground
         source={require('../images/road.png')}
         style={styles.backgroundImage}>
         <View style={styles.rectangle}>
           <Logo type="Login" />
-          <Form type="Login" />
+
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder="Email"
+            placeholderTextColor="#C0C0C0"
+            returnKeyType="next"
+            value={this.state.email}
+            onChangeText={email => this.setState({email})}
+            // error={!!this.state.error}
+            // errorText={this.state.error}
+            autoCapitalize="none"
+            //autoCompleteType="email"
+            textContentType="emailAddress"
+            keyboardType="email-address"
+          />
+
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholderTextColor="#C0C0C0"
+            placeholder="Password"
+            returnKeyType="done"
+            value={this.state.password}
+            onChangeText={password => this.setState({password})}
+            // error={!!this.state.error}
+            // errorText={this.state.error}
+            secureTextEntry
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            loading={this.state.loading}
+            style={styles.button}
+            onPress={_onLoginPressed}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+
           <View style={styles.signupTextCont}>
             <Text style={styles.signupText}>New User? </Text>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Signup')}>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Signup')}>
               <Text style={styles.signupButton}>Click here to Signup</Text>
             </TouchableOpacity>
           </View>
@@ -76,5 +142,28 @@ const styles = StyleSheet.create({
     top: 0,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
+  },
+  inputBox: {
+    width: 300,
+    backgroundColor: 'rgba(255, 255,255,1)',
+    // borderRadius: 25,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: 'rgba(0, 0,0,1)',
+    marginVertical: 10,
+  },
+  button: {
+    width: 300,
+    height: 55,
+    backgroundColor: '#FF6201',
+    // borderRadius: 25,
+    marginVertical: 10,
+    paddingVertical: 5,
+  },
+  buttonText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
   },
 });
