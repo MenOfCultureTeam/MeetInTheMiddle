@@ -19,7 +19,7 @@ export default class Signup extends Component {
         style={styles.backgroundImage}>
         <View style={styles.rectangle}>
           <Logo type="Signup" />
-          <Form type="Signup" />
+          <Form type="Signup" parent = {this.props.navigation}/>
           <View style={styles.signupTextCont}>
             <Text style={styles.signupText}>Already have an account? </Text>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>

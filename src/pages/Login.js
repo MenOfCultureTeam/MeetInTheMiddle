@@ -20,7 +20,7 @@ export default class Login extends Component {
         style={styles.backgroundImage}>
         <View style={styles.rectangle}>
           <Logo type="Login" />
-          <Form type="Login" />
+          <Form type="Login" parent={this.props.navigation} />
           <View style={styles.signupTextCont}>
             <Text style={styles.signupText}>New User? </Text>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Signup')}>

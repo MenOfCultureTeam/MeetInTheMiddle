@@ -7,6 +7,7 @@ import SignUp from './src/pages/Signup';
 import Login from './src/pages/Login';
 import Main from './src/pages/Main';
 import Map from './src/pages/Map';
+import Form from './src/components/Form';
 // create our app's navigation stack
 export default createAppContainer(
   createSwitchNavigator(
@@ -16,6 +17,7 @@ export default createAppContainer(
       Login: Login,
       Main: Main,
       Map: Map,
+      Form: Form,
     },
     {
       initialRouteName: 'Loading',
