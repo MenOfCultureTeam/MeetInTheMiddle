@@ -12,11 +12,11 @@ export default class Routes extends Component {
     return (
       <Router>
         <Stack key="root" hideNavBar={true}>
-          <Scene key="login" component={Login} title="Login"  initial={true}/>
+          <Scene key="login" component={Login} title="Login"  />
           <Scene key="signup" component={Signup} title="Register" />
           <Scene key="map" component={Map} title="Map"  />
           <Scene key="Edit_Profile" component={Edit_profile} title="Edit_Profile"   />
-          <Scene key="Profile_Welcome" component={Profile_Welcome} title="Profile_Welcome"   />
+          <Scene key="Profile_Welcome" component={Profile_Welcome} title="Profile_Welcome"initial={true}   />
         </Stack>
       </Router>
     );
