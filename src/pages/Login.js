@@ -29,6 +29,7 @@ export default class Login extends Component {
       loading: false,
       error: '',
       ErrorStatus: false,
+      GoogleLoginSuccess:false
     };
   }
   componentWillUnmount() {
@@ -48,7 +49,9 @@ export default class Login extends Component {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      this.setState({userInfo});
+
+      this.setState({GoogleLoginSuccess: userInfo});
+
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -179,7 +182,10 @@ export default class Login extends Component {
               autoCapitalize="none"
             />
           </View>
-
+          <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+              <Text style={styles.signupButton}>Forgot password?</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             loading={this.state.loading}
             style={styles.button}
@@ -187,6 +193,8 @@ export default class Login extends Component {
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
 
+
+          {/* {this.state.GoogleLoginSuccess!=null?this.props.navigation.navigate('Map'):null} */}
           <GoogleSigninButton //Google sigin api button object
             style={{width: 192, height: 48}}
             size={GoogleSigninButton.Size.Wide}
@@ -194,7 +202,10 @@ export default class Login extends Component {
             onPress={this.signIn}
             disabled={this.state.isSigninInProgress}
           />
+
+
           <View style={styles.signupTextCont}>
+
             <Text style={styles.signupText}>New User? </Text>
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('Signup')}>

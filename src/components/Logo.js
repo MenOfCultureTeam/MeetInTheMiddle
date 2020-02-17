@@ -13,7 +13,10 @@ export default class Logo extends Component {
           <Text style={styles.LoginText}>Meet in the Middle</Text>
         ) : this.props.type == 'Signup' ? (
           <Text style={styles.SignupText}>Sign up</Text>
-        ) : null}
+        ) : this.props.type == 'ForgotPassword' ? (
+          <Text style={styles.LoginText}>Reset Password</Text>
+        )
+          : null}
       </View>
     );
   }
