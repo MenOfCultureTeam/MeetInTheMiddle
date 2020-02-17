@@ -57,7 +57,7 @@ export default class Profile_Welcome extends Component {
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
             <Button
-              onPress={() => this.props.navigation.navigate('Map')}
+              onPress={() => this.props.navigation.navigate('Map', {findAddress: false})}
               title="Save Changes"
               color="orange"
             />

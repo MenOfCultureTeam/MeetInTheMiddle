@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 50%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      var Result;
+      var Middle;
+      var Test;
+      function initMap() {
+        var request = {origin: "los angeles, ca", destination: "irvine, ca", travelMode: "DRIVING"
+      ,avoidHighways: true};
+        var directionsService = new google.maps.DirectionsService();
+        directionsService.route(request, function(result, status) {
+          if(status == 'OK')
+          {
+            Result=result;
+            var i = 0;
+            var steps = Result.routes[0].legs[0].steps;
+            var totalDistance = Result.routes[0].legs[0].distance.value;
+            var halfDistance = totalDistance/2;
+            var curDistance = 0;
+            while(curDistance <= halfDistance){
+              curDistance += steps[i].distance.value;
+              i++;
+            }
+            var curPath = steps[i-1].path;
+            var curLatLng = steps[i].start_point;
+            var testDistance = curDistance;
+            i = curPath.length - 1;
+            while(testDistance >= halfDistance)
+            {
+              testDistance = curDistance - Math.abs(calDistance(curPath[i],curLatLng));
+              i--;
+            }
+            Middle = curPath[i];
+            console.log("MIDDLE: " + Middle.lat() + ", " + Middle.lng());
+          }
+          });
+
+      }
+      function calDistance(point1, point2)
+      {
+        var R = 6371e3; // metres
+        var lat1 = point1.lat();
+        var lat2 = point2.lat();
+        var lng1 = point1.lng();
+        var lng2 = point2.lng();
+        var φ1 = toRadians(lat1);
+        var φ2 = toRadians(lat2);
+        var Δφ = toRadians(lat2-lat1);
+        var Δλ = toRadians(lng2-lng1);
+
+        var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        var d = R * c;
+
+        return d;
+      }
+      function toRadians(degrees)
+      {
+        var pi = Math.PI;
+        return degrees * (pi/180);
+      }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA&callback=initMap"
+    async defer></script>
+</body>
+</html>
