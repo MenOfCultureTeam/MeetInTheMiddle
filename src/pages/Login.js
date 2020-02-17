@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {emailValidator, passwordValidator} from '../core/utils';
 import {loginUser} from '../api/auth-api';
@@ -18,19 +19,23 @@ import {
 } from 'react-native-google-signin';
 
 export default class Login extends Component {
-  state = {
-    email: '',
-    password: '',
-    loading: false,
-    error: '',
-    isSigninInProgress: false,
-  };
+  _isMounted = false;
   constructor(props) {
     super(props);
-    // this.state = {display: 'Login'};
+    this.state = {
+      username: '',
+      email: '',
+      password: '',
+      loading: false,
+      error: '',
+      ErrorStatus: false,
+    };
   }
-
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   componentDidMount = async () => {
+    // this._isMounted = true;
     try {
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       // google services are available
@@ -102,11 +107,18 @@ export default class Login extends Component {
       if (emailError || passwordError) {
         if (emailError) {
           this.state.error = emailError;
+          this.setState({error: emailError, ErrorStatus: true});
         } else {
           this.state.error = passwordError;
+          this.setState({error: passwordError, ErrorStatus: true});
         }
-        console.log(this.state.error);
+        // Alert.alert(this.state.error);
+        // console.log(this.state.error);
         return;
+      } else {
+        if (this._isMounted) {
+          this.setState({error: '', ErrorStatus: false});
+        }
       }
       this.state.loading = true;
       // setLoading(true);
@@ -118,6 +130,12 @@ export default class Login extends Component {
 
       if (response.error) {
         this.state.error = response.error;
+        // Alert.alert(this.state.error);
+        this.setState({error: response.error, ErrorStatus: true});
+      } else {
+        if (this._isMounted) {
+          this.setState({error: '', ErrorStatus: false});
+        }
       }
       this.state.loading = false;
       // setLoading(false);
@@ -128,36 +146,40 @@ export default class Login extends Component {
         style={styles.backgroundImage}>
         <View style={styles.rectangle}>
           <Logo type="Login" />
+          <View style={styles.errorView}>
+            {this.state.ErrorStatus == true ? (
+              <Text style={styles.errorText}>{this.state.error}</Text>
+            ) : null}
+            <TextInput
+              style={styles.inputBox}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder="Email"
+              placeholderTextColor="#C0C0C0"
+              returnKeyType="next"
+              value={this.state.email}
+              onChangeText={email => this.setState({email})}
+              // error={!!this.state.error}
+              // errorText={this.state.error}
+              autoCapitalize="none"
+              //autoCompleteType="email"
+              textContentType="emailAddress"
+              keyboardType="email-address"
+            />
+            <TextInput
+              style={styles.inputBox}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholderTextColor="#C0C0C0"
+              placeholder="Password"
+              returnKeyType="done"
+              value={this.state.password}
+              onChangeText={password => this.setState({password})}
+              // error={!!this.state.error}
+              // errorText={this.state.error}
+              secureTextEntry
+              autoCapitalize="none"
+            />
+          </View>
 
-          <TextInput
-            style={styles.inputBox}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Email"
-            placeholderTextColor="#C0C0C0"
-            returnKeyType="next"
-            value={this.state.email}
-            onChangeText={email => this.setState({email})}
-            // error={!!this.state.error}
-            // errorText={this.state.error}
-            autoCapitalize="none"
-            //autoCompleteType="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-          />
-
-          <TextInput
-            style={styles.inputBox}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholderTextColor="#C0C0C0"
-            placeholder="Password"
-            returnKeyType="done"
-            value={this.state.password}
-            onChangeText={password => this.setState({password})}
-            // error={!!this.state.error}
-            // errorText={this.state.error}
-            secureTextEntry
-            autoCapitalize="none"
-          />
           <TouchableOpacity
             loading={this.state.loading}
             style={styles.button}
@@ -264,5 +286,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
+  },
+  errorView: {
+    paddingVertical: 10,
+    justifyContent: 'space-between',
+    // marginTop: 5,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#ffffff',
+    textAlign: 'left',
+    // top: 15,
+    paddingVertical: 0,
+    color: 'red',
   },
 });
