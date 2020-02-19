@@ -7,33 +7,13 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions,
-  Alert,
-  TextField,
 } from 'react-native';
 
 import Logo from '../components/Logo';
 import {emailValidator, passwordValidator, nameValidator} from '../core/utils';
 import {signInUser} from '../api/auth-api';
 export default class Signup extends Component {
-  _isMounted = false;
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: '',
-      email: '',
-      password: '',
-      loading: false,
-      error: '',
-      ErrorStatus: false,
-    };
-  }
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-  componentDidMount = async () => {
-    this._isMounted = true;
-  };
-
+  state = {username: '', email: '', password: '', loading: false, error: ''};
   render() {
     const _onSignUpPressed = async () => {
       if (this.state.loading) return;
@@ -45,22 +25,13 @@ export default class Signup extends Component {
       if (emailError || passwordError || nameError) {
         if (emailError) {
           this.state.error = emailError;
-          this.setState({error: emailError, ErrorStatus: true});
-        } else if (nameError) {
-          this.state.error = nameError;
-          this.setState({error: nameError, ErrorStatus: true});
-        } else {
+        } else if (passwordError) {
           this.state.error = passwordError;
-          this.setState({error: passwordError, ErrorStatus: true});
+        } else {
+          this.state.error = nameError;
         }
-
-        // Alert.alert(this.state.error);
-        //console.log(this.state.error);
+        console.log(this.state.error);
         return;
-      } else {
-        if (this._isMounted) {
-          this.setState({error: '', ErrorStatus: false});
-        }
       }
 
       this.state.loading = true;
@@ -73,12 +44,6 @@ export default class Signup extends Component {
 
       if (response.error) {
         this.state.error = response.error;
-        this.setState({error: response.error, ErrorStatus: true});
-        // Alert.alert(response.error);
-      } else {
-        if (this._isMounted) {
-          this.setState({error: '', ErrorStatus: false});
-        }
       }
 
       this.state.loading = false;
@@ -89,53 +54,47 @@ export default class Signup extends Component {
         style={styles.backgroundImage}>
         <View style={styles.rectangle}>
           <Logo type="Signup" />
-          <View style={styles.errorView}>
-            {this.state.ErrorStatus == true ? (
-              <Text style={styles.errorText}>{this.state.error}</Text>
-            ) : null}
-
-            <TextInput
-              style={styles.inputBox}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder="Email"
-              placeholderTextColor="#C0C0C0"
-              selectionColor="#fff"
-              keyboardType="email-address"
-              returnKeyType="next"
-              value={this.state.email}
-              onChangeText={email => this.setState({email})}
-              // error={!!email.error}
-              // errorText={email.error}
-              autoCapitalize="none"
-              autoCompleteType="email"
-              textContentType="emailAddress"
-            />
-            <TextInput
-              style={styles.inputBox}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder="Username"
-              placeholderTextColor="#C0C0C0"
-              returnKeyType="next"
-              value={this.state.name}
-              onChangeText={username => this.setState({username})}
-              //error={!!name.error}
-              // errorText={name.error}
-            />
-            <TextInput
-              style={styles.inputBox}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder="Password"
-              placeholderTextColor="#C0C0C0"
-              selectionColor="#fff"
-              returnKeyType="done"
-              value={this.state.password}
-              onChangeText={password => this.setState({password})}
-              // error={!!password.error}
-              // errorText={password.error}
-              secureTextEntry
-              autoCapitalize="none"
-            />
-          </View>
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder="Email"
+            placeholderTextColor="#C0C0C0"
+            selectionColor="#fff"
+            keyboardType="email-address"
+            returnKeyType="next"
+            value={this.state.email}
+            onChangeText={email => this.setState({email})}
+            // error={!!email.error}
+            // errorText={email.error}
+            autoCapitalize="none"
+            autoCompleteType="email"
+            textContentType="emailAddress"
+          />
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder="Username"
+            placeholderTextColor="#C0C0C0"
+            returnKeyType="next"
+            value={this.state.name}
+            onChangeText={username => this.setState({username})}
+            // error={!!name.error}
+            // errorText={name.error}
+          />
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder="Password"
+            placeholderTextColor="#C0C0C0"
+            selectionColor="#fff"
+            returnKeyType="done"
+            value={this.state.password}
+            onChangeText={password => this.setState({password})}
+            // error={!!password.error}
+            // errorText={password.error}
+            secureTextEntry
+            autoCapitalize="none"
+          />
 
           <TouchableOpacity style={styles.button} onPress={_onSignUpPressed}>
             <Text style={styles.buttonText}>Sign up</Text>
@@ -216,23 +175,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingVertical: 5,
   },
-  errorText: {
-    fontSize: 14,
-    color: '#ffffff',
-    textAlign: 'left',
-    // top: 15,
-    paddingVertical: 0,
-    color: 'red',
-  },
   buttonText: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
-  },
-  errorView: {
-    paddingVertical: 10,
-    justifyContent: 'space-between',
-    // marginTop: 5,
   },
 });
