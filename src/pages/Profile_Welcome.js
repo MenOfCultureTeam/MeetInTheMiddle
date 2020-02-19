@@ -20,7 +20,6 @@ export default class Edit_Profile extends Component {
               }}
             />
           </View>
-
           <Text style={styles.SignInName}>Jack Robinson</Text>
         </View>
       </View>
@@ -42,7 +41,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
+  },  
+    FirstNameLabel: {
+    top:30,
+    fontSize: 36,
+    color: 'rgba(256, 256, 256, 1)',
+    fontWeight: 'bold',
+    position: 'absolute',
   },
+
   LoginText: {
     marginVertical: 50,
     fontSize: 36,

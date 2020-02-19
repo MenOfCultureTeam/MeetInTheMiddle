@@ -17,6 +17,15 @@ import {
   statusCodes,
 } from 'react-native-google-signin';
 
+//Feb 16, make sure you npm install react-native-animatable --save
+//import animateable library
+import * as Animateable from 'react-native-animatable'
+
+//Feb 17, make sure you npm install --save react-native-video
+//import video for background usage
+import Video from 'react-native-video';
+
+
 export default class Login extends Component {
   state = {
     email: '',
@@ -123,13 +132,17 @@ export default class Login extends Component {
       // setLoading(false);
     };
     return (
-      <ImageBackground
-        source={require('../images/road.png')}
-        style={styles.backgroundImage}>
-        <View style={styles.rectangle}>
-          <Logo type="Login" />
-
-          <TextInput
+      <View>
+        <Video source ={require('../images/loginAnimatedBG.mp4')}
+        style={styles.backgroundVideo}
+        muted={true}
+        repeat={true}
+        resizeMode={"cover"}
+        rate={1.0}
+        ignoreSilentSwitch={"obey"}/>
+        <Logo type="Login" />
+        <Animateable.View style={styles.rectangle}  animation="slideOutUp" delay={300}>
+          <TextInput 
             style={styles.inputBox}
             underlineColorAndroid="rgba(0,0,0,0)"
             placeholder="Email"
@@ -166,7 +179,7 @@ export default class Login extends Component {
           </TouchableOpacity>
 
           <GoogleSigninButton //Google sigin api button object
-            style={{width: 192, height: 48}}
+            style={{width: 301, height: 51, top:71}}
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
             onPress={this.signIn}
@@ -179,8 +192,8 @@ export default class Login extends Component {
               <Text style={styles.signupButton}>Click here to Signup</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </ImageBackground>
+        </Animateable.View>
+      </View>
     );
   }
 }
@@ -198,12 +211,12 @@ GoogleSignin.configure({
 });
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#191816',
+  /*container: {
+    backgroundColor: '#AF1C1C',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
+  },*/
   signupTextCont: {
     flexGrow: 1,
     alignItems: 'flex-end',
@@ -212,7 +225,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   signupText: {
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(0,0,0,1)',
     fontSize: 16,
   },
   signupButton: {
@@ -221,43 +234,41 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   rectangle: {
+    opacity: 0.8,
     justifyContent: 'center',
     flex: 2,
-    height: 550,
-    width: 350,
+    height: 370,
+    width: 400,
     alignItems: 'center',
-    backgroundColor: '#403E3F',
+    backgroundColor: '#DCDCDC',
     position: 'absolute',
     alignSelf: 'center',
-    top: 75,
+    top: 450,
     borderColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
-  },
-  backgroundImage: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    borderTopLeftRadius:55,
+    borderTopRightRadius:55
   },
   inputBox: {
     width: 300,
     backgroundColor: 'rgba(255, 255,255,1)',
-    // borderRadius: 25,
-    paddingHorizontal: 16,
+    borderRadius: 25,
+    paddingHorizontal: 10,
     fontSize: 16,
     color: 'rgba(0, 0,0,1)',
-    marginVertical: 10,
+    top:60,
+    marginVertical: 8,
+    elevation: 8
   },
   button: {
     width: 300,
     height: 55,
+    top:70,
     backgroundColor: '#FF6201',
-    // borderRadius: 25,
+    borderRadius: 25,
     marginVertical: 10,
     paddingVertical: 5,
+    elevation: 8
   },
   buttonText: {
     fontSize: 32,
@@ -265,4 +276,13 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
   },
+  backgroundVideo: {
+    height: 850,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    alignItems: "stretch",
+    bottom: 0,
+    right: 0
+  }
 });
