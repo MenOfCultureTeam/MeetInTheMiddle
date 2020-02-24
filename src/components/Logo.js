@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, Image} from 'react-native';
 
+//Feb 16, make sure you npm install react-native-animatable --save
+//import animateable library
+import * as Animateable from 'react-native-animatable'
+
 export default class Logo extends Component {
   render() {
     return (
@@ -10,13 +14,10 @@ export default class Logo extends Component {
           source={require('../images/logo.png')}
         /> */}
         {this.props.type == 'Login' ? (
-          <Text style={styles.LoginText}>Meet in the Middle</Text>
+          <Text style={styles.LoginText}>Meet{"\n"}In{"\n"}Middle </Text>
         ) : this.props.type == 'Signup' ? (
-          <Text style={styles.SignupText}>Sign up</Text>
-        ) : this.props.type == 'ForgotPassword' ? (
-          <Text style={styles.LoginText}>Reset Password</Text>
-        )
-          : null}
+          <Animateable.Text style={styles.SignupText} animation="slideInRight" >Personal Info</Animateable.Text>
+        ) : null}
       </View>
     );
   }
@@ -29,18 +30,27 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
+  //Feb 17, change some value for login logo
   LoginText: {
-    marginVertical: 50,
-    fontSize: 36,
-    color: 'rgba(255, 255, 255, 1)',
+    marginVertical: 150,
+    fontSize: 55,
+    color: 'rgba(255, 255, 255,1)',
     fontWeight: 'bold',
-    position: 'absolute',
+    position: 'relative',
+    top:-60,
+    textShadowColor: '#333399',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1
   },
   SignupText: {
     marginVertical: 45,
-    fontSize: 36,
-    color: 'rgba(255, 255, 255, 1)',
+    fontSize: 40,
+    color: '#ffffff',
     fontWeight: 'bold',
-    position: 'absolute',
+    position: 'relative',
+    top:230,
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius:5
   },
 });

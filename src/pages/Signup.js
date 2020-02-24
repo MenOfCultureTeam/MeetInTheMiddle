@@ -14,6 +14,15 @@ import {
 import Logo from '../components/Logo';
 import {emailValidator, passwordValidator, nameValidator} from '../core/utils';
 import {signInUser} from '../api/auth-api';
+
+//Feb 16, make sure you npm install react-native-animatable --save
+//import animateable library
+import * as Animateable from 'react-native-animatable';
+
+//Feb 17, make sure you npm install --save react-native-video
+//import video for background usage
+import Video from 'react-native-video';
+
 export default class Signup extends Component {
   _isMounted = false;
   constructor(props) {
@@ -84,58 +93,56 @@ export default class Signup extends Component {
       this.state.loading = false;
     };
     return (
-      <ImageBackground
-        source={require('../images/road.png')}
-        style={styles.backgroundImage}>
-        <View style={styles.rectangle}>
-          <Logo type="Signup" />
-          <View style={styles.errorView}>
-            {this.state.ErrorStatus == true ? (
-              <Text style={styles.errorText}>{this.state.error}</Text>
-            ) : null}
-
-            <TextInput
-              style={styles.inputBox}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder="Email"
-              placeholderTextColor="#C0C0C0"
-              selectionColor="#fff"
-              keyboardType="email-address"
-              returnKeyType="next"
-              value={this.state.email}
-              onChangeText={email => this.setState({email})}
-              // error={!!email.error}
-              // errorText={email.error}
-              autoCapitalize="none"
-              autoCompleteType="email"
-              textContentType="emailAddress"
-            />
-            <TextInput
-              style={styles.inputBox}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder="Username"
-              placeholderTextColor="#C0C0C0"
-              returnKeyType="next"
-              value={this.state.name}
-              onChangeText={username => this.setState({username})}
-              //error={!!name.error}
-              // errorText={name.error}
-            />
-            <TextInput
-              style={styles.inputBox}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder="Password"
-              placeholderTextColor="#C0C0C0"
-              selectionColor="#fff"
-              returnKeyType="done"
-              value={this.state.password}
-              onChangeText={password => this.setState({password})}
-              // error={!!password.error}
-              // errorText={password.error}
-              secureTextEntry
-              autoCapitalize="none"
-            />
-          </View>
+      <View>
+        <Video source ={require('../images/loginAnimatedBG.mp4')}
+        style={styles.backgroundVideo}
+        muted={true}
+        repeat={true}
+        resizeMode={"cover"}
+        rate={1.0}
+        ignoreSilentSwitch={"obey"}/>
+        <Animateable.View style={styles.rectangle} animation="slideOutUp" delay={300}>
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder="Email"
+            placeholderTextColor="#C0C0C0"
+            selectionColor="#fff"
+            keyboardType="email-address"
+            returnKeyType="next"
+            value={this.state.email}
+            onChangeText={email => this.setState({email})}
+            // error={!!email.error}
+            // errorText={email.error}
+            autoCapitalize="none"
+            autoCompleteType="email"
+            textContentType="emailAddress"
+          />
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder="Username"
+            placeholderTextColor="#C0C0C0"
+            returnKeyType="next"
+            value={this.state.name}
+            onChangeText={username => this.setState({username})}
+            // error={!!name.error}
+            // errorText={name.error}
+          />
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder="Password"
+            placeholderTextColor="#C0C0C0"
+            selectionColor="#fff"
+            returnKeyType="done"
+            value={this.state.password}
+            onChangeText={password => this.setState({password})}
+            // error={!!password.error}
+            // errorText={password.error}
+            secureTextEntry
+            autoCapitalize="none"
+          />
 
           <TouchableOpacity style={styles.button} onPress={_onSignUpPressed}>
             <Text style={styles.buttonText}>Sign up</Text>
@@ -148,9 +155,10 @@ export default class Signup extends Component {
               <Text style={styles.signupButton}>Sign in</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </Animateable.View>
+        <Logo type="Signup" />
         {/* <Toast message={error} onDismiss={() => setError('')} /> */}
-      </ImageBackground>
+      </View>
     );
   }
 }
@@ -169,7 +177,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   signupText: {
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(0,0,0,1)',
     fontSize: 16,
   },
   signupButton: {
@@ -178,43 +186,41 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   rectangle: {
+    opacity: 0.8,
     justifyContent: 'center',
     flex: 2,
-    height: 550,
-    width: 350,
+    height: 470,
+    width: 400,
     alignItems: 'center',
-    backgroundColor: '#403E3F',
+    backgroundColor: '#DCDCDC',
     position: 'absolute',
     alignSelf: 'center',
-    top: 75,
+    top: 350,
     borderColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
-  },
-  backgroundImage: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    borderTopLeftRadius:55,
+    borderTopRightRadius:55
   },
   inputBox: {
+    top:100,
     width: 300,
     backgroundColor: 'rgba(255, 255,255,1)',
-    // borderRadius: 25,
+    borderRadius: 25,
     paddingHorizontal: 16,
     fontSize: 16,
     color: 'rgba(0, 0,0,1)',
     marginVertical: 10,
+    elevation: 8
   },
   button: {
+    top:120,
     width: 300,
     height: 55,
     backgroundColor: '#FF6201',
-    // borderRadius: 25,
+    borderRadius: 25,
     marginVertical: 10,
     paddingVertical: 5,
+    elevation: 8
   },
   errorText: {
     fontSize: 14,
@@ -230,9 +236,13 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
   },
-  errorView: {
-    paddingVertical: 10,
-    justifyContent: 'space-between',
-    // marginTop: 5,
-  },
+  backgroundVideo: {
+    height: 850,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    alignItems: "stretch",
+    bottom: 0,
+    right: 0
+  }
 });
