@@ -43,12 +43,13 @@ const styles = StyleSheet.create({
     textShadowRadius: 1
   },
   SignupText: {
-    marginVertical: 45,
+    marginVertical: 30,
+    width: '100%',
     fontSize: 40,
     color: '#ffffff',
     fontWeight: 'bold',
     position: 'relative',
-    top:230,
+    top:10,
     textShadowColor: '#000000',
     textShadowOffset: { width: 3, height: 3 },
     textShadowRadius:5
