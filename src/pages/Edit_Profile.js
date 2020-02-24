@@ -68,7 +68,7 @@ export default class Profile_Welcome extends Component {
         <Animateable.View style={styles.buttonContainer} animation="zoomIn">
           <View style={styles.button}>
             <Button
-              onPress={() => this.props.navigation.navigate('Map', {findAddress: false})}
+              onPress={() => this.props.navigation.navigate('Map')}
               title="Save Changes"
               color="orange"
             />

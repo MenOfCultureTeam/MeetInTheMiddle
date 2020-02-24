@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 export default class AddressInput extends Component {
-    state = {Address1: '', Address2: ''};
+    state = {Address1: '', Address2: '', Keyword: ''};
     render()
     {
         return (
@@ -36,17 +36,26 @@ export default class AddressInput extends Component {
                     onChangeText={Address2 => this.setState({Address2})}
                     value={this.state.Address2}
                 />
+                <TextInput
+                    style={styles.inputBox}
+                    underlineColorAndroid="rgba(0,0,0,0)"
+                    placeholder="Keyword (ex. cafe, taco, etc...)"
+                    placeholderTextColor="#C0C0C0"
+                    selectionColor="#fff"
+                    onChangeText={Keyword => this.setState({Keyword})}
+                    value={this.state.Keyword}
+                />
                 <View style={styles.buttonContainer}>
                     <View style={styles.button}>
                         <Button
-                            onPress={() => this.props.navigation.navigate('Map', {findAddress: false})}
+                            onPress={() => this.props.navigation.navigate('Map')}
                             title="Back"
                             color="orange"
                         />
                     </View>
                     <View style={styles.button}>
                         <Button
-                            onPress={() => this.props.navigation.navigate('Map', {Address1: this.state.Address1, Address2: this.state.Address2, findAddress: false})}
+                            onPress={() => this.props.navigation.navigate('Map', {Address1: this.state.Address1, Address2: this.state.Address2, Keyword: this.state.Keyword})}
                             title="Find the Middle"
                             color="orange"
                         />
