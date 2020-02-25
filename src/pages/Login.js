@@ -29,19 +29,23 @@ import Video from 'react-native-video';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default class Login extends Component {
-  state = {
-    email: '',
-    password: '',
-    loading: false,
-    error: '',
-    isSigninInProgress: false,
-  };
+  _isMounted = false;
   constructor(props) {
     super(props);
-    // this.state = {display: 'Login'};
+    this.state = {
+      username: '',
+      email: '',
+      password: '',
+      loading: false,
+      error: '',
+      ErrorStatus: false,
+    };
   }
-
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   componentDidMount = async () => {
+    // this._isMounted = true;
     try {
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       // google services are available
@@ -113,11 +117,18 @@ export default class Login extends Component {
       if (emailError || passwordError) {
         if (emailError) {
           this.state.error = emailError;
+          this.setState({error: emailError, ErrorStatus: true});
         } else {
           this.state.error = passwordError;
+          this.setState({error: passwordError, ErrorStatus: true});
         }
-        console.log(this.state.error);
+        // Alert.alert(this.state.error);
+        // console.log(this.state.error);
         return;
+      } else {
+        if (this._isMounted) {
+          this.setState({error: '', ErrorStatus: false});
+        }
       }
       this.state.loading = true;
       // setLoading(true);
@@ -129,6 +140,12 @@ export default class Login extends Component {
 
       if (response.error) {
         this.state.error = response.error;
+        // Alert.alert(this.state.error);
+        this.setState({error: response.error, ErrorStatus: true});
+      } else {
+        if (this._isMounted) {
+          this.setState({error: '', ErrorStatus: false});
+        }
       }
       this.state.loading = false;
       // setLoading(false);
@@ -143,8 +160,11 @@ export default class Login extends Component {
         rate={1.0}
         ignoreSilentSwitch={"obey"}/>
         <Logo type="Login" />
-        <Animateable.View style={styles.rectangle}  animation="slideInUp" delay={300}>
+        <Animateable.View style={styles.rectangle}  animation="slideInUp" delay = {1400} >
           <KeyboardAwareScrollView>
+          {this.state.ErrorStatus == true ? (
+              <Text style={styles.errorText}>{this.state.error}</Text>
+            ) : null}  
           <TextInput 
               style={styles.inputBox}
               underlineColorAndroid="rgba(0,0,0,0)"
@@ -235,7 +255,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   rectangle: {
-    height: 330,
+    height: 370,
     width: Dimensions.get('window').width,
     backgroundColor: 'rgba(220, 220, 220, 0.6)',
     position: 'absolute',
@@ -247,14 +267,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius:55
   },
   inputBox: {
-    top:10,
+    top:15,
     width: '100%',
     backgroundColor: 'rgba(255, 255, 255, 1)',
     borderRadius: 25,
     fontSize: 16,
     color: 'rgba(0, 0,0,1)',
     elevation: 7,
-    marginVertical: 10,
+    marginVertical: 13,
     paddingHorizontal: 16
   },
   button: {
@@ -262,7 +282,7 @@ const styles = StyleSheet.create({
     height: 55,
     backgroundColor: '#FF6201',
     borderRadius: 25,
-    marginVertical: 15,
+    marginVertical: 23,
     paddingVertical: 5,
     elevation: 7,
   },
@@ -278,5 +298,15 @@ const styles = StyleSheet.create({
     left:0,
     bottom:0,
     right:0
+  },
+  errorText:{
+    fontWeight: 'bold',
+    top:10,
+    color: 'rgb(230, 0, 0)',
+    fontSize: 18,
+    textAlign: 'center',
+    textShadowColor: '#FFFFFF',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius:1
   }
 });

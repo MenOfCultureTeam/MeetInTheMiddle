@@ -69,7 +69,7 @@ export default class Signup extends Component {
         resizeMode={"cover"}
         rate={1.0}
         ignoreSilentSwitch={"obey"}/>
-        <Animateable.View style={styles.rectangle} animation="slideInUp" delay={300}>
+        <Animateable.View style={styles.rectangle} animation="slideInUp" delay = {1400}>
         <KeyboardAwareScrollView>
           <Logo type="Signup" />
           <TextInput
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   signupText: {
-    color: 'rgba(0,0,0,1)',
+    color: 'rgba(82, 82, 82, 1)',
     fontSize: 16,
   },
   signupButton: {
