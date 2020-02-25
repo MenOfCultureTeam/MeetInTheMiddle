@@ -9,6 +9,8 @@ import Map from './src/pages/Map';
 import Edit_Profile from './src/pages/Edit_Profile';
 import Profile_Welcome from './src/pages/Profile_Welcome';
 import AddressInput from './src/pages/AddressInput';
+import ForgotPassword from './src/pages/ForgotPassword';
+
 // create our app's navigation stack
 export default createAppContainer(
   createSwitchNavigator(
@@ -20,7 +22,7 @@ export default createAppContainer(
       Edit_Profile: Edit_Profile,
       Profile_Welcome: Profile_Welcome,
       AddressInput: AddressInput,
-
+        ForgotPassword: ForgotPassword,
     },
     {
       initialRouteName: 'AuthLoadingScreen',

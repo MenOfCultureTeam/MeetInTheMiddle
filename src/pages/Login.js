@@ -26,7 +26,7 @@ import * as Animateable from 'react-native-animatable';
 import Video from 'react-native-video';
 
 //Feb 24
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export default class Login extends Component {
   _isMounted = false;
@@ -150,22 +150,28 @@ export default class Login extends Component {
       this.state.loading = false;
       // setLoading(false);
     };
+
     return (
-      <View style = {styles.container}>
-        <Video source ={require('../images/loginAnimatedBG.mp4')}
-        style={styles.backgroundVideo}
-        muted={true}
-        repeat={true}
-        resizeMode={"cover"}
-        rate={1.0}
-        ignoreSilentSwitch={"obey"}/>
+      <View style={styles.container}>
+        <Video
+          source={require('../images/loginAnimatedBG.mp4')}
+          style={styles.backgroundVideo}
+          muted={true}
+          repeat={true}
+          resizeMode={'cover'}
+          rate={1.0}
+          ignoreSilentSwitch={'obey'}
+        />
         <Logo type="Login" />
-        <Animateable.View style={styles.rectangle}  animation="slideInUp" delay = {1400} >
+        <Animateable.View
+          style={styles.rectangle}
+          animation="slideInUp"
+          delay={1400}>
           <KeyboardAwareScrollView>
-          {this.state.ErrorStatus == true ? (
+            {this.state.ErrorStatus == true ? (
               <Text style={styles.errorText}>{this.state.error}</Text>
-            ) : null}  
-          <TextInput 
+            ) : null}
+            <TextInput
               style={styles.inputBox}
               underlineColorAndroid="rgba(0,0,0,0)"
               placeholder="Email"
@@ -215,6 +221,12 @@ export default class Login extends Component {
                 <Text style={styles.signupButton}>Click here to Signup</Text>
               </TouchableOpacity>
             </View>
+            <TouchableOpacity
+              loading={this.state.loading}
+              style={styles.signupTextCont}
+              onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+              <Text style={styles.signupText}>Forgot Password?</Text>
+            </TouchableOpacity>
           </KeyboardAwareScrollView>
         </Animateable.View>
       </View>
@@ -235,7 +247,7 @@ GoogleSignin.configure({
 });
 
 const styles = StyleSheet.create({
-  container: {  
+  container: {
     flex: 1,
   },
   signupTextCont: {
@@ -260,14 +272,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(220, 220, 220, 0.6)',
     position: 'absolute',
     bottom: 0,
-    alignItems: 'center', 
+    alignItems: 'center',
     borderColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
-    borderTopLeftRadius:55,
-    borderTopRightRadius:55
+    borderTopLeftRadius: 55,
+    borderTopRightRadius: 55,
   },
   inputBox: {
-    top:15,
+    top: 15,
     width: '100%',
     backgroundColor: 'rgba(255, 255, 255, 1)',
     borderRadius: 25,
@@ -275,7 +287,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0,0,1)',
     elevation: 7,
     marginVertical: 13,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   button: {
     width: '100%',
@@ -294,19 +306,19 @@ const styles = StyleSheet.create({
   },
   backgroundVideo: {
     position: 'absolute',
-    top:0,
-    left:0,
-    bottom:0,
-    right:0
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
-  errorText:{
+  errorText: {
     fontWeight: 'bold',
-    top:10,
+    top: 10,
     color: 'rgb(230, 0, 0)',
     fontSize: 18,
     textAlign: 'center',
     textShadowColor: '#FFFFFF',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius:1
-  }
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 1,
+  },
 });

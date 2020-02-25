@@ -7,6 +7,8 @@ export const logoutUser = () => {
   console.log('user logged out');
 };
 
+
+
 export const signInUser = async ({name, email, password}) => {
   try {
     await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -42,6 +44,10 @@ export const signInUser = async ({name, email, password}) => {
   }
 };
 
+// passwordReset: email => {
+//   return firebase.auth().sendPasswordResetEmail(email)
+// },
+
 export const loginUser = async ({email, password}) => {
   try {
     await firebase.auth().signInWithEmailAndPassword(email, password);
@@ -71,9 +77,33 @@ export const loginUser = async ({email, password}) => {
   }
 };
 
-export const sendEmailWithPassword = async email => {
+export const sendEmailWithPassword = async ({email}) => {
   try {
-    await firebase.auth().sendPasswordResetEmail(email);
+    console.log('Resetting password');
+    console.log(email);
+    await firebase.auth().sendPasswordResetEmail(email, null);
+
+    // var actionCodeSettings = {
+    //   url: 'https://maps-258321.firebaseapp.com/__/auth/action',
+    //   iOS: {
+    //     bundleId: 'com.example.ios'
+    //   },
+    //   android: {
+    //     packageName: 'com.example.android',
+    //     installApp: true,
+    //     minimumVersion: '12'
+    //   },
+    //   handleCodeInApp: true
+    // };
+    // firebase.auth().sendPasswordResetEmail(
+    //     'test@kishan.club', null)
+    //     .then(function() {
+    //       // Password reset email sent.
+    //     })
+    //     .catch(function(error) {
+    //       // Error occurred. Inspect error.code.
+    //     });
+
     return {};
   } catch (error) {
     switch (error.code) {
