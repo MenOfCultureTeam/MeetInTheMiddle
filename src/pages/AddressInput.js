@@ -63,7 +63,7 @@ export default class AddressInput extends Component {
                 </View>
             </View>
             );
-            
+
     }
 
 }
@@ -77,21 +77,17 @@ const styles = StyleSheet.create({
 
     inputBox: {
       width: 300,
-      backgroundColor: 'rgba(255, 255,255,0.2)',
       borderRadius: 25,
       backgroundColor: 'rgba(255, 255,255,1)',
       // borderRadius: 25,
       paddingHorizontal: 16,
       fontSize: 16,
-      color: '#ffffff',
       color: 'rgba(0, 0,0,1)',
       marginVertical: 10,
     },
     buttonText: {
       fontSize: 16,
       fontWeight: '500',
-      fontSize: 32,
-      fontWeight: 'bold',
       color: '#ffffff',
       textAlign: 'center',
     },

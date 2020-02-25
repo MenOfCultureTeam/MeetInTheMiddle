@@ -133,6 +133,7 @@ export default class Login extends Component {
       this.state.loading = false;
       // setLoading(false);
     };
+
     return (
       <View style = {styles.container}>
         <Video source ={require('../images/loginAnimatedBG.mp4')}
@@ -145,7 +146,7 @@ export default class Login extends Component {
         <Logo type="Login" />
         <Animateable.View style={styles.rectangle}  animation="slideInUp" delay={300}>
           <KeyboardAwareScrollView>
-          <TextInput 
+          <TextInput
               style={styles.inputBox}
               underlineColorAndroid="rgba(0,0,0,0)"
               placeholder="Email"
@@ -195,6 +196,12 @@ export default class Login extends Component {
                 <Text style={styles.signupButton}>Click here to Signup</Text>
               </TouchableOpacity>
             </View>
+              <TouchableOpacity
+                  loading={this.state.loading}
+                  style={styles.signupTextCont}
+                  onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+                  <Text style={styles.signupText}>Forgot Password?</Text>
+              </TouchableOpacity>
           </KeyboardAwareScrollView>
         </Animateable.View>
       </View>
@@ -215,7 +222,7 @@ GoogleSignin.configure({
 });
 
 const styles = StyleSheet.create({
-  container: {  
+  container: {
     flex: 1,
   },
   signupTextCont: {
@@ -240,7 +247,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(220, 220, 220, 0.6)',
     position: 'absolute',
     bottom: 0,
-    alignItems: 'center', 
+    alignItems: 'center',
     borderColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
     borderTopLeftRadius:55,
