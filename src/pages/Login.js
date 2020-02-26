@@ -20,12 +20,14 @@ import {
 
 //Feb 16, make sure you npm install react-native-animatable --save
 //import animateable library
-import * as Animateable from 'react-native-animatable'
+import * as Animateable from 'react-native-animatable';
 
 //Feb 17, make sure you npm install --save react-native-video
 //import video for background usage
 import Video from 'react-native-video';
 
+//Feb 24
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export default class Login extends Component {
   _isMounted = false;
@@ -38,7 +40,6 @@ export default class Login extends Component {
       loading: false,
       error: '',
       ErrorStatus: false,
-      GoogleLoginSuccess:false
     };
   }
   componentWillUnmount() {
@@ -152,72 +153,84 @@ export default class Login extends Component {
       this.state.loading = false;
       // setLoading(false);
     };
+
     return (
-      <View>
-        <Video source ={require('../images/loginAnimatedBG.mp4')}
-        style={styles.backgroundVideo}
-        muted={true}
-        repeat={true}
-        resizeMode={"cover"}
-        rate={1.0}
-        ignoreSilentSwitch={"obey"}/>
+      <View style={styles.container}>
+        <Video
+          source={require('../images/loginAnimatedBG.mp4')}
+          style={styles.backgroundVideo}
+          muted={true}
+          repeat={true}
+          resizeMode={'cover'}
+          rate={1.0}
+          ignoreSilentSwitch={'obey'}
+        />
         <Logo type="Login" />
-        <Animateable.View style={styles.rectangle}  animation="slideOutUp" delay={300}>
-          <TextInput 
-            style={styles.inputBox}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Email"
-            placeholderTextColor="#C0C0C0"
-            returnKeyType="next"
-            value={this.state.email}
-            onChangeText={email => this.setState({email})}
-            // error={!!this.state.error}
-            // errorText={this.state.error}
-            autoCapitalize="none"
-            //autoCompleteType="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-          />
+        <Animateable.View
+          style={styles.rectangle}
+          animation="slideInUp"
+          delay={1400}>
+          <KeyboardAwareScrollView>
+            {this.state.ErrorStatus == true ? (
+              <Text style={styles.errorText}>{this.state.error}</Text>
+            ) : null}
+            <TextInput
+              style={styles.inputBox}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholder="Email"
+              placeholderTextColor="#C0C0C0"
+              returnKeyType="next"
+              value={this.state.email}
+              onChangeText={email => this.setState({email})}
+              // error={!!this.state.error}
+              // errorText={this.state.error}
+              autoCapitalize="none"
+              //autoCompleteType="email"
+              textContentType="emailAddress"
+              keyboardType="email-address"
+            />
 
-          <TextInput
-            style={styles.inputBox}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholderTextColor="#C0C0C0"
-            placeholder="Password"
-            returnKeyType="done"
-            value={this.state.password}
-            onChangeText={password => this.setState({password})}
-            // error={!!this.state.error}
-            // errorText={this.state.error}
-            secureTextEntry
-            autoCapitalize="none"
-          />
-          <TouchableOpacity
-            loading={this.state.loading}
-            style={styles.button}
-            onPress={_onLoginPressed}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-
-
-          {/* {this.state.GoogleLoginSuccess!=null?this.props.navigation.navigate('Map'):null} */}
-          <GoogleSigninButton //Google sigin api button object
-            style={{width: 301, height: 51, top:71}}
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={this.signIn}
-            disabled={this.state.isSigninInProgress}
-          />
-
-
-          <View style={styles.signupTextCont}>
-
-            <Text style={styles.signupText}>New User? </Text>
+            <TextInput
+              style={styles.inputBox}
+              underlineColorAndroid="rgba(0,0,0,0)"
+              placeholderTextColor="#C0C0C0"
+              placeholder="Password"
+              returnKeyType="done"
+              value={this.state.password}
+              onChangeText={password => this.setState({password})}
+              // error={!!this.state.error}
+              // errorText={this.state.error}
+              secureTextEntry
+              autoCapitalize="none"
+            />
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Signup')}>
-              <Text style={styles.signupButton}>Click here to Signup</Text>
+              loading={this.state.loading}
+              style={styles.button}
+              onPress={_onLoginPressed}>
+              <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-          </View>
+
+            <GoogleSigninButton //Google sigin api button object
+              style={{width: 301, height: 51}}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={this.signIn}
+              disabled={this.state.isSigninInProgress}
+            />
+            <View style={styles.signupTextCont}>
+              <Text style={styles.signupText}>New User? </Text>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Signup')}>
+                <Text style={styles.signupButton}>Click here to Signup</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              loading={this.state.loading}
+              style={styles.signupTextCont}
+              onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+              <Text style={styles.signupText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </KeyboardAwareScrollView>
         </Animateable.View>
       </View>
     );
@@ -237,12 +250,9 @@ GoogleSignin.configure({
 });
 
 const styles = StyleSheet.create({
-  /*container: {
-    backgroundColor: '#AF1C1C',
+  container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },*/
+  },
   signupTextCont: {
     flexGrow: 1,
     alignItems: 'flex-end',
@@ -251,7 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   signupText: {
-    color: 'rgba(0,0,0,1)',
+    color: 'rgba(82, 82, 82, 1)',
     fontSize: 16,
   },
   signupButton: {
@@ -260,41 +270,36 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   rectangle: {
-    opacity: 0.8,
-    justifyContent: 'center',
-    flex: 2,
     height: 370,
-    width: 400,
-    alignItems: 'center',
-    backgroundColor: '#DCDCDC',
+    width: Dimensions.get('window').width,
+    backgroundColor: 'rgba(220, 220, 220, 0.6)',
     position: 'absolute',
-    alignSelf: 'center',
-    top: 450,
+    bottom: 0,
+    alignItems: 'center',
     borderColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
-    borderTopLeftRadius:55,
-    borderTopRightRadius:55
+    borderTopLeftRadius: 55,
+    borderTopRightRadius: 55,
   },
   inputBox: {
-    width: 300,
-    backgroundColor: 'rgba(255, 255,255,1)',
+    top: 15,
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     borderRadius: 25,
-    paddingHorizontal: 10,
     fontSize: 16,
     color: 'rgba(0, 0,0,1)',
-    top:60,
-    marginVertical: 8,
-    elevation: 8
+    elevation: 7,
+    marginVertical: 13,
+    paddingHorizontal: 16,
   },
   button: {
-    width: 300,
+    width: '100%',
     height: 55,
-    top:70,
     backgroundColor: '#FF6201',
     borderRadius: 25,
-    marginVertical: 10,
+    marginVertical: 23,
     paddingVertical: 5,
-    elevation: 8
+    elevation: 7,
   },
   buttonText: {
     fontSize: 32,
@@ -303,12 +308,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   backgroundVideo: {
-    height: 850,
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
-    alignItems: "stretch",
     bottom: 0,
-    right: 0
-  }
+    right: 0,
+  },
+  errorText: {
+    fontWeight: 'bold',
+    top: 10,
+    color: 'rgb(230, 0, 0)',
+    fontSize: 18,
+    textAlign: 'center',
+    textShadowColor: '#FFFFFF',
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 1,
+  },
 });
