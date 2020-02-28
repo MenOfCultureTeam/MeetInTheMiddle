@@ -23,9 +23,6 @@ import * as Animateable from 'react-native-animatable';
 //import video for background usage
 import Video from 'react-native-video';
 
-//Feb 24
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 export default class Signup extends Component {
   _isMounted = false;
   constructor(props) {
@@ -96,7 +93,7 @@ export default class Signup extends Component {
       this.state.loading = false;
     };
     return (
-      <View style = {styles.container}>
+      <View>
         <Video source ={require('../images/loginAnimatedBG.mp4')}
         style={styles.backgroundVideo}
         muted={true}
@@ -104,9 +101,7 @@ export default class Signup extends Component {
         resizeMode={"cover"}
         rate={1.0}
         ignoreSilentSwitch={"obey"}/>
-        <Animateable.View style={styles.rectangle} animation="slideInUp" delay = {1400}>
-        <KeyboardAwareScrollView>
-          <Logo type="Signup" />
+        <Animateable.View style={styles.rectangle} animation="slideOutUp" delay={300}>
           <TextInput
             style={styles.inputBox}
             underlineColorAndroid="rgba(0,0,0,0)"
@@ -160,15 +155,19 @@ export default class Signup extends Component {
               <Text style={styles.signupButton}>Sign in</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAwareScrollView>
         </Animateable.View>
+        <Logo type="Signup" />
+        {/* <Toast message={error} onDismiss={() => setError('')} /> */}
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#191816',
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   signupTextCont: {
     flexGrow: 1,
@@ -178,7 +177,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   signupText: {
-    color: 'rgba(82, 82, 82, 1)',
+    color: 'rgba(0,0,0,1)',
     fontSize: 16,
   },
   signupButton: {
@@ -187,35 +186,41 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   rectangle: {
-    height: 450,
-    width: Dimensions.get('window').width,
-    backgroundColor: 'rgba(220, 220, 220, 0.6)',
+    opacity: 0.8,
+    justifyContent: 'center',
+    flex: 2,
+    height: 470,
+    width: 400,
+    alignItems: 'center',
+    backgroundColor: '#DCDCDC',
     position: 'absolute',
-    bottom: 0,
-    alignItems: 'center', 
+    alignSelf: 'center',
+    top: 350,
     borderColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
     borderTopLeftRadius:55,
     borderTopRightRadius:55
   },
   inputBox: {
-    width: '100%',
-    backgroundColor: 'rgba(255, 255,255, 1)',
+    top:100,
+    width: 300,
+    backgroundColor: 'rgba(255, 255,255,1)',
     borderRadius: 25,
+    paddingHorizontal: 16,
     fontSize: 16,
     color: 'rgba(0, 0,0,1)',
-    elevation: 7,
     marginVertical: 10,
-    paddingHorizontal: 16
+    elevation: 8
   },
   button: {
-    width: '100%',
+    top:120,
+    width: 300,
     height: 55,
     backgroundColor: '#FF6201',
     borderRadius: 25,
     marginVertical: 10,
     paddingVertical: 5,
-    elevation: 7,
+    elevation: 8
   },
   errorText: {
     fontSize: 14,
@@ -232,10 +237,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   backgroundVideo: {
-    position: 'absolute',
-    top:0,
-    left:0,
-    bottom:0,
-    right:0
+    height: 850,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    alignItems: "stretch",
+    bottom: 0,
+    right: 0
   }
 });

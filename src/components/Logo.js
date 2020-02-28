@@ -16,7 +16,7 @@ export default class Logo extends Component {
         {this.props.type == 'Login' ? (
           <Text style={styles.LoginText}>Meet{"\n"}In{"\n"}Middle </Text>
         ) : this.props.type == 'Signup' ? (
-          <Animateable.Text style={styles.SignupText} animation="slideInRight" delay = {1400}>Personal Info</Animateable.Text>
+          <Animateable.Text style={styles.SignupText} animation="slideInRight" >Personal Info</Animateable.Text>
         ) : null}
       </View>
     );
@@ -43,15 +43,14 @@ const styles = StyleSheet.create({
     textShadowRadius: 1
   },
   SignupText: {
-    marginVertical: 30,
-    width: '100%',
+    marginVertical: 45,
     fontSize: 40,
     color: '#ffffff',
     fontWeight: 'bold',
     position: 'relative',
-    top:10,
+    top:230,
     textShadowColor: '#000000',
-    textShadowOffset: { width: 2, height: 2 },
+    textShadowOffset: { width: 3, height: 3 },
     textShadowRadius:5
   },
 });
