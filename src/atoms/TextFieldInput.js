@@ -5,7 +5,7 @@ import {StyleSheet, TextInput, View} from 'react-native';
 //textFieldType: Normal (requires text input), Email, Password
 const TextFieldInput = ({text, textFieldType}) => {
   return (
-    <View style={styles.container}>
+    <View >
       {textFieldType == 'Normal' ? (
         <TextInput
           style={styles.inputBox}
@@ -51,21 +51,17 @@ const TextFieldInput = ({text, textFieldType}) => {
 
 export default TextFieldInput;
 const styles = StyleSheet.create({
-  container: {
-    // flexGrow: 1,
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
+
   inputBox: {
-    width: 300,
-    backgroundColor: 'rgba(255, 255,255,1)',
+    top: 15,
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     borderRadius: 25,
-    paddingHorizontal: 10,
     fontSize: 16,
     color: 'rgba(0, 0,0,1)',
-    top: 60,
-    marginVertical: 8,
-    elevation: 8,
+    elevation: 7,
+    marginVertical: 13,
+    paddingHorizontal: 16,
   },
 });
+
