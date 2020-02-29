@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
   Button,
+  Dimensions,
   View,
   Text,
   StyleSheet,
@@ -235,44 +236,44 @@ export default class Map extends Component {
             ))}
           </MapView>
             
-        <View style={styles.rectangle}></View>
-
-        <View style={styles.MainContainerMain}>
-          <View style={styles.MainContainer}>
-            <Image
-              source={require('../images/Message.png')}
-              style={{
-                width: 40,
-                height: 40,
-                borderColor: 'black',
-                borderRadius: 150 / 2,
-              }}
-            />
-          </View>
-
-          <View style={styles.MainContainer2}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+        <View style={styles.rectangle}>
+          <View style={styles.MainContainerMain}>
+            <View style={styles.MainContainer}>
               <Image
-                source={require('../images/user.png')}
-                style={{height: 40, width: 40}}
+                source={require('../images/Message.png')}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderColor: 'black',
+                  borderRadius: 150 / 2,
+                }}
               />
-            </TouchableOpacity>
-          </View>
+            </View>
 
-          <View style={styles.MainContainer3}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('AddressInput')}>
-            <Image
-              source={require('../images/Location.png')}
-              style={{
-                width: 40,
-                height: 40,
-                borderColor: 'black',
-                borderRadius: 150 / 2,
-              }}
-            />
-            </TouchableOpacity>
+            <View style={styles.MainContainer2}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+                <Image
+                  source={require('../images/user.png')}
+                  style={{height: 40, width: 40}}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.MainContainer3}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('AddressInput')}>
+              <Image
+                source={require('../images/Location.png')}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderColor: 'black',
+                  borderRadius: 150 / 2,
+                }}
+              />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -282,16 +283,8 @@ export default class Map extends Component {
 const styles = StyleSheet.create({
   MainContainerMain: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignContent: 'space-between',
-    marginTop: 610,
-  },
-
-  MainContainer2: {
-    height: 40,
-    width: 40,
-    backgroundColor: 'white',
-    borderColor: 'white',
   },
 
   container: {
@@ -301,6 +294,30 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  MainContainer:{
+    height: 40,
+    width: 40,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    marginHorizontal:'10%'  
+    
+  },
+
+  MainContainer2: {
+    height: 40,
+    width: 40,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    marginHorizontal:'10%'  
+  },
+
+  MainContainer3:{
+    height: 40,
+    width: 40,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    marginHorizontal:'10%'  
   },
   map: {
     // ...StyleSheet.absoluteFillObject,
@@ -312,14 +329,14 @@ const styles = StyleSheet.create({
   },
   rectangle: {
     justifyContent: 'center',
-    flex: 2,
+    flex: 3,
     height: 60,
-    width: 450,
+    width: Dimensions.get('window').width,
     alignItems: 'center',
     backgroundColor: 'white',
     position: 'absolute',
     alignSelf: 'center',
-    top: 600,
+    bottom:0,
     borderColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
   },
