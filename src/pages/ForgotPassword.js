@@ -7,154 +7,171 @@ import {
   TouchableOpacity,
   ImageBackground,
   Dimensions,
+  Alert,
+  TextField,
 } from 'react-native';
+
 import Logo from '../components/Logo';
-import {emailValidator, passwordValidator, nameValidator} from '../core/utils';
 import {sendEmailWithPassword} from '../api/auth-api';
-
-//Feb 16, make sure you npm install react-native-animatable --save
-//import animateable library
-import * as Animateable from 'react-native-animatable';
-
-//Feb 17, make sure you npm install --save react-native-video
-//import video for background usage
-import Video from 'react-native-video';
-
-//Feb 24
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 export default class Signup extends Component {
-  state = {email: '', loading: false, error: ''};
-  render() {
-    const _onForgotPasswordPressed = async () => {
-      if (this.state.loading) return;
-
-      const emailError = emailValidator(this.state.email);
-        if (emailError) {
-          this.state.error = emailError;
-          console.log(this.state.error);
-          return;
-        }
-
-      this.state.loading = true;
-
-      const response = await sendEmailWithPassword({
-              email: this.state.email,
-      });
-
-      if (response.error) {
-        this.state.error = response.error;
+    constructor(props) {
+        super(props);
+        this.state = {
+          email: '',
+          loading: false
+        };
       }
-
-      this.state.loading = false;
+  render() {
+    const _SendPassword = async () => {
+        if (this.state.loading) return;
+        this.state.loading = true;
+        const response = await sendEmailWithPassword({
+            email: this.state.email,
+            password: this.state.password,
+          });
+        this.state.loading = false;
     };
     return (
-      <View style = {styles.container}>
-        <Video source ={require('../images/loginAnimatedBG.mp4')}
-        style={styles.backgroundVideo}
-        muted={true}
-        repeat={true}
-        resizeMode={"cover"}
-        rate={1.0}
-        ignoreSilentSwitch={"obey"}/>
-        <Animateable.View style={styles.rectangle} animation="slideInUp" delay={300}>
-        <KeyboardAwareScrollView>
-          <Logo type="Signup" />
-          <TextInput
-            style={styles.inputBox}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Email"
-            placeholderTextColor="#C0C0C0"
-            selectionColor="#fff"
-            keyboardType="email-address"
-            returnKeyType="next"
-            value={this.state.email}
-            onChangeText={email => this.setState({email})}
-            // error={!!email.error}
-            // errorText={email.error}
-            autoCapitalize="none"
-            autoCompleteType="email"
-            textContentType="emailAddress"
-          />
+      <ImageBackground
+        source={require('../images/road.png')}
+        style={styles.backgroundImage}>
+        <View style={styles.rectangle}>
+            <Logo type="ForgotPassword" />
+            <View style={styles.view}>
+                <TextInput
+                    style={styles.inputBox}
+                    underlineColorAndroid="rgba(0,0,0,0)"
+                    placeholder="Email"
+                    placeholderTextColor="#C0C0C0"
+                    returnKeyType="done"
+                    value={this.state.email}
+                    onChangeText={email => this.setState({email})}
+                    // error={!!this.state.error}
+                    // errorText={this.state.error}
+                    autoCapitalize="none"
+                    //autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                />  
+                <Text style={styles.description}>Enter your email address. We'll send email instructions on how to reset your password</Text>
+            </View>
 
-          <TouchableOpacity style={styles.button} onPress={_onForgotPasswordPressed}>
-            <Text style={styles.buttonText}>Forgot Password</Text>
-          </TouchableOpacity>
-
-          <View style={styles.signupTextCont}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Login')}>
-              <Text style={styles.signupButton}>Sign in</Text>
+                    style={styles.button}
+                    onPress={_SendPassword}> 
+
+                    <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
-          </View>
-        </KeyboardAwareScrollView>
-        </Animateable.View>
-      </View>
+            
+            <TouchableOpacity
+                    style={styles.buttonBack}
+                    onPress={() => this.props.navigation.navigate('Login')}>
+                    <Text style={styles.buttonText}>Back</Text>
+            </TouchableOpacity>
+
+
+            </View>
+
+
+
+      </ImageBackground>
     );
   }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  signupTextCont: {
-    flexGrow: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    flexDirection: 'row',
-  },
-  signupText: {
-    color: 'rgba(0,0,0,1)',
-    fontSize: 16,
-  },
-  signupButton: {
-    color: '#FF6201',
-    fontSize: 20,
-    fontWeight: '500',
-  },
+
   rectangle: {
-    height: 450,
-    width: Dimensions.get('window').width,
-    backgroundColor: 'rgba(220, 220, 220, 0.6)',
-    position: 'absolute',
-    bottom: 0,
+    justifyContent: 'center',
+    flex: 2,
+    height: 550,
+    width: 350,
     alignItems: 'center',
+    backgroundColor: '#403E3F',
+    position: 'absolute',
+    alignSelf: 'center',
+    top: 75,
     borderColor: 'rgba(255,255,255,0.2)',
     borderWidth: 1,
-    borderTopLeftRadius:55,
-    borderTopRightRadius:55
+  },
+  backgroundImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
   inputBox: {
-    width: '100%',
-    backgroundColor: 'rgba(255, 255,255, 1)',
-    borderRadius: 25,
+    width: 300,
+    backgroundColor: 'rgba(255, 255,255,1)',
+    // borderRadius: 25,
+    paddingHorizontal: 16,
     fontSize: 16,
     color: 'rgba(0, 0,0,1)',
-    elevation: 7,
     marginVertical: 10,
-    paddingHorizontal: 16
   },
   button: {
-    width: '100%',
+    width: 300,
     height: 55,
     backgroundColor: '#FF6201',
-    borderRadius: 25,
+    // borderRadius: 25,
     marginVertical: 10,
     paddingVertical: 5,
-    elevation: 7,
+    position: 'absolute',
+    top: 350
+  },
+  buttonBack: {
+    width: 300,
+    height: 55,
+    backgroundColor: '#FF6201',
+    // borderRadius: 25,
+    marginVertical: 10,
+    paddingVertical: 5,
+    position: 'absolute',
+    top: 425
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#ffffff',
+    textAlign: 'left',
+    // top: 15,
+    paddingVertical: 0,
+    color: 'red',
   },
   buttonText: {
-    fontSize: 25,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
   },
-  backgroundVideo: {
+  view: {
+    // paddingVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',   
     position: 'absolute',
-    top:0,
-    left:0,
-    bottom:0,
-    right:0
-  }
+    top:200,
+
+    
+  },
+  SignupText: {
+    // marginVertical: 45,
+    fontSize: 36,
+    color: 'rgba(255, 255, 255, 1)',
+    fontWeight: 'bold',
+    alignSelf: 'center',    
+
+    
+  },
+  description: {
+    // marginVertical: 45,
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 1)',
+    // fontWeight: 'bold',
+    // alignSelf: 'flex-start',
+    lineHeight: 22,
+    paddingHorizontal:20
+    
+    // position: 'absolute',
+  },
 });
