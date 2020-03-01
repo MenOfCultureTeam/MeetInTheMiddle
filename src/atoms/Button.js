@@ -32,4 +32,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
   },
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 75ccf9684a1f5f392e41791e4efd008b1ea5414b

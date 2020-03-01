@@ -4,21 +4,16 @@ import {StyleSheet, Text, View} from 'react-native';
 
 const TitleField = ({text}) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.LoginText}>{text}</Text>
-    </View>
+
+    <Text style={styles.LoginText}>{text}</Text>
+
   );
 };
 
 export default TitleField;
 
 const styles = StyleSheet.create({
-  container: {
-    // flexGrow: 1,
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
+
   LoginText: {
     marginVertical: 150,
     fontSize: 55,
