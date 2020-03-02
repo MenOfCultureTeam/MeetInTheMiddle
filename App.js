@@ -12,6 +12,7 @@ import AddressInput from './src/pages/AddressInput';
 import ForgotPassword from './src/pages/ForgotPassword';
 import LoginOrganism from './src/organisms/LoginOrganism'
 import SignupOrganism from './src/organisms/SignupOrganism'
+import Testpage from './src/pages/Testpage'
 // create our app's navigation stack
 export default createAppContainer(
   createSwitchNavigator(
@@ -25,10 +26,11 @@ export default createAppContainer(
       AddressInput: AddressInput,
       ForgotPassword: ForgotPassword,
       LoginOrganism: LoginOrganism,
-      SignupOrganism: SignupOrganism
+      SignupOrganism: SignupOrganism,
+      Testpage: Testpage
     },
     {
-      initialRouteName: 'AuthLoadingScreen',
+      initialRouteName: 'Testpage',
     },
   ),
 );

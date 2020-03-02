@@ -1,6 +1,6 @@
 import React from 'react';
-
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import { View } from 'react-native';
+import {TouchableOpacity, Text, StyleSheet,Image} from 'react-native';
 //text: String to display in placeholder
 const Button = ({text}) => {
   return (
@@ -8,11 +8,29 @@ const Button = ({text}) => {
     // loading={this.state.loading}
     // onPress={_onLoginPressed}
     style={styles.button}
-    > 
+    >
     <Text style={styles.buttonText}>{text}</Text>
   </TouchableOpacity>
   );
 };
+
+
+export const RoundButton = () => {
+  return(
+    <View style={styles.MainContainer2}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+                <Image
+                  source={require('../images/user.png')}
+                  style={{height: 40, width: 40}}
+                />
+              </TouchableOpacity>
+      </View>
+
+  );
+
+};
+
 
 export default Button;
 
@@ -32,8 +50,4 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
   },
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 75ccf9684a1f5f392e41791e4efd008b1ea5414b
