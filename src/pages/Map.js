@@ -7,8 +7,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Platform,
+  PermissionsAndroid,
+  ToastAndroid,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
 import '@mapbox/polyline'
 
 let id = 0;
@@ -43,11 +47,22 @@ function toRadians(degrees)
 function testMap() {
   if (typeof this.props.navigation.state.params.Address1 != 'undefined')
   {
-    var url = 'https://maps.googleapis.com/maps/api/directions/json?origin='+
-    this.props.navigation.state.params.Address1.replace(" ", "+") +
-    '&destination=' +
-    this.props.navigation.state.params.Address2.replace(" ", "+") +
-    '&key=AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA'
+    var Address1 = "place_id:"+this.props.navigation.state.params.Address1
+    var Address2 = "place_id:"+this.props.navigation.state.params.Address2
+    if(Address1 == 'place_id:current')
+    {
+      Address1 = this.state.currentLat + ',' + this.state.currentLng
+    }
+    if(Address2 == 'place_id:current')
+    {
+      Address2 = this.state.currentLat + ',' + this.state.currentLng
+    }
+    var url = 'https://maps.googleapis.com/maps/api/directions/json?origin='
+     + Address1
+     + '&destination=' 
+     + Address2 
+     + '&key=AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA'
+    console.log(url)
     return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -94,7 +109,7 @@ function searchNearby(lat, lng)
 {
   if (typeof this.props.navigation.state.params.Keyword != 'undefined')
   {
-    var keyword = this.props.navigation.state.params.Keyword
+    var keyword = this.props.navigation.state.params.Keyword.replace(" ", "+")
     if(keyword != '')
     {
       var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+
@@ -175,15 +190,61 @@ function addInterestMarker(lat, lng, name, rating, address, price)
     })
 }
 export default class Map extends Component {
+  state = {
+    markers: [],
+    interestMarkers: [],
+    middleLat: 0,
+    middleLng: 0,
+    currentLat: 0,
+    currentLng: 0,
+  }
+  hasLocationPermission = async () => {
+    if (Platform.OS === 'ios' ||
+        (Platform.OS === 'android' && Platform.Version < 23)) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+
+    if (hasPermission) return true;
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) return true;
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show('Location permission denied by user.', ToastAndroid.LONG);
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show('Location permission revoked by user.', ToastAndroid.LONG);
+    }
+
+    return false;
+  }
+
+  getLocation = async () => {
+    const hasLocationPermission = await this.hasLocationPermission();
+
+    if (!hasLocationPermission) return;
+
+    Geolocation.getCurrentPosition(
+        (position) => {
+          this.setState({middleLat: position.coords.latitude, middleLng: position.coords.longitude,
+                        currentLat: position.coords.latitude, currentLng: position.coords.longitude})
+        },
+        (error) => {
+          console.log(error);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 50, forceRequestLocation: true }
+      );
+  }
   constructor(props)
   {
     super(props);
-    this.state = {
-      markers: [],
-      interestMarkers: [],
-      middleLat: 0,
-      middleLng: 0
-    }
+    this.getLocation();
     if(typeof this.props.navigation.state.params !== 'undefined')
     {
       testMap.call(this);
@@ -191,7 +252,7 @@ export default class Map extends Component {
   }
   
   render() {
-    console.log(this.state.interestMarkers)
+    console.log(this.state)
     return (
       <View style={styles.container}>
         <MapView
