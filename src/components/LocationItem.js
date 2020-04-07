@@ -4,9 +4,9 @@ import { View, Alert, Text, StyleSheet, TouchableOpacity } from 'react-native';
 class LocationItem extends PureComponent {
   _handlePress = async () => {
     const res = await this.props.fetchDetails(this.props.place_id)
-    this.props.clearSearch();
     this.props.setState()
-    //console.log('result', res)
+    this.props.clearSearch();
+    
   }
 
   render() {

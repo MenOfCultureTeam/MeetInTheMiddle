@@ -44,77 +44,101 @@ function toRadians(degrees)
   return degrees * (pi/180);
 }
 
-function testMap() {
-  if (typeof this.props.navigation.state.params.Address1 != 'undefined')
+async function testMap(middleLat, middleLng) {
+  if (typeof this.props.navigation.state.params.Addresses != 'undefined')
   {
-    var Address1 = "place_id:"+this.props.navigation.state.params.Address1
-    var Address2 = "place_id:"+this.props.navigation.state.params.Address2
-    if(Address1 == 'place_id:current')
+    var addresses = this.props.navigation.state.params.Addresses;
+    var length = Object.keys(addresses).length
+    if(length < 3)
     {
-      Address1 = this.state.currentLat + ',' + this.state.currentLng
-    }
-    if(Address2 == 'place_id:current')
-    {
-      Address2 = this.state.currentLat + ',' + this.state.currentLng
-    }
-    var url = 'https://maps.googleapis.com/maps/api/directions/json?origin='
-     + Address1
-     + '&destination=' 
-     + Address2 
-     + '&key=AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA'
-    console.log(url)
-    return fetch(url)
-      .then((response) => response.json())
-      .then((responseJson) => {
+      var Address1 = "place_id:"+addresses[0]
+      var Address2 = "place_id:"+addresses[1]
+      if(Address1 == 'place_id:current')
+      {
+        Address1 = middleLat + ',' + middleLng
+      }
+      if(Address2 == 'place_id:current')
+      {
+        Address2 = middleLat + ',' + middleLng
+      }
+      var url = 'https://maps.googleapis.com/maps/api/directions/json?origin='
+      + Address1
+      + '&destination=' 
+      + Address2 
+      if(this.props.navigation.state.params.Transport=='local') url += '&avoid=highways'
+      url += '&key=AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA'
+      try {
+        const response = await fetch(url);
+        const responseJson = await response.json();
         var i = 0;
         var steps = responseJson.routes[0].legs[0].steps;
         var totalDistance = responseJson.routes[0].legs[0].distance.value;
-        var halfDistance = totalDistance/2;
+        var halfDistance = totalDistance / 2;
         var curDistance = 0;
-        while(curDistance <= halfDistance){
+        while (curDistance <= halfDistance) {
           curDistance += steps[i].distance.value;
           i++;
         }
         var polyline = require('@mapbox/polyline');
-        var curPath = polyline.decode(steps[i-1]['polyline']['points']);
+        var curPath = polyline.decode(steps[i - 1]['polyline']['points']);
         var curLatLng = steps[i].end_location;
         var testDistance = curDistance;
         i = curPath.length - 1;
-        while(testDistance >= halfDistance)
-        {
-          testDistance = curDistance - Math.abs(calDistance(curPath[i],curLatLng));
+        while (testDistance >= halfDistance) {
+          testDistance = curDistance - Math.abs(calDistance(curPath[i], curLatLng));
           i--;
         }
-        var initAddress = responseJson.routes[0].legs[0]
-        var address1 = initAddress.start_location
-        var address2 = initAddress.end_location
-        var midLat = curPath[i][0]
-        var midLng = curPath[i][1]
-        addMarker.call(this, midLat, midLng)
-        addMarker.call(this, address1.lat,address1.lng)
-        addMarker.call(this, address2.lat,address2.lng)
-        
-        this.setState({middleLat: midLat,
-          middleLng: midLng})
-        searchNearby.call(this, midLat, midLng)
-      })
-      .catch((error) => {
-      console.error(error);
-    });
+        var initAddress = responseJson.routes[0].legs[0];
+        var address1 = initAddress.start_location;
+        var address2 = initAddress.end_location;
+        var midLat = curPath[i][0];
+        var midLng = curPath[i][1];
+        addMarker.call(this, midLat, midLng);
+        addMarker.call(this, address1.lat, address1.lng);
+        addMarker.call(this, address2.lat, address2.lng);
+        this.setState({
+        middleLat: midLat,
+          middleLng: midLng
+        });
+        searchNearby.call(this, midLat, midLng);
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+    else
+    {
+      var uri = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA&place_id="
+      var totalX = 0, totalY = 0, midX, midY
+      for(var index in addresses)
+      {
+        const responseJson = await fetch(uri+addresses[index]).then((response) => response.json())
+        var loc = responseJson["result"]["geometry"]["location"]
+        addMarker.call(this, loc["lat"], loc["lng"]);
+        totalX += loc["lat"]
+        totalY += loc["lng"]
+      }
+      midX = totalX/length
+      midY = totalY/length
+      addMarker.call(this, midX, midY);
+      this.setState({
+        middleLat: midX,
+        middleLng: midY
+        });
+        searchNearby.call(this, midX, midY);
+    }
   }
-  
 }
-
 function searchNearby(lat, lng)
 {
   if (typeof this.props.navigation.state.params.Keyword != 'undefined')
   {
     var keyword = this.props.navigation.state.params.Keyword.replace(" ", "+")
+    var radius = this.props.navigation.state.params.Range;
     if(keyword != '')
     {
       var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+
-      lat + ',' + lng + '&radius=1500&type=restaurant&keyword='+keyword+'&key=AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA'
-      console.log(url)
+      lat + ',' + lng + '&radius=' + radius + '&type=restaurant&keyword='+keyword+'&key=AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA'
       return fetch(url)
       .then((response) => response.json())
       .then((responseJson) => 
@@ -228,12 +252,24 @@ export default class Map extends Component {
   getLocation = async () => {
     const hasLocationPermission = await this.hasLocationPermission();
 
-    if (!hasLocationPermission) return;
+    if (!hasLocationPermission)
+    {
+      if(typeof this.props.navigation.state.params !== 'undefined')
+      {
+        
+        testMap.call(this, 0, 0);
+      }
+      return;
+    }
 
     Geolocation.getCurrentPosition(
         (position) => {
           this.setState({middleLat: position.coords.latitude, middleLng: position.coords.longitude,
                         currentLat: position.coords.latitude, currentLng: position.coords.longitude})
+          if(typeof this.props.navigation.state.params !== 'undefined')
+          {
+            testMap.call(this, position.coords.latitude, position.coords.longitude);
+          }
         },
         (error) => {
           console.log(error);
@@ -245,14 +281,10 @@ export default class Map extends Component {
   {
     super(props);
     this.getLocation();
-    if(typeof this.props.navigation.state.params !== 'undefined')
-    {
-      testMap.call(this);
-    }
+    
   }
   
   render() {
-    console.log(this.state)
     return (
       <View style={styles.container}>
         <MapView
