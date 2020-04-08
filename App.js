@@ -13,7 +13,7 @@ import ForgotPassword from './src/pages/ForgotPassword';
 import LoginOrganism from './src/organisms/LoginOrganism'
 import SignupOrganism from './src/organisms/SignupOrganism'
 import Testpage from './src/pages/Testpage'
-import FlatListTrial from './src/pages/FlatListTrial';
+// import FlatListTrial from './src/pages/FlatListTrial';
 import {FlatListDemo} from "./src/pages/FlatListDemo";
 
 
