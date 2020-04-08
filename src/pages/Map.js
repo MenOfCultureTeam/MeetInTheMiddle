@@ -112,11 +112,21 @@ async function testMap(middleLat, middleLng) {
       var totalX = 0, totalY = 0, midX, midY
       for(var index in addresses)
       {
-        const responseJson = await fetch(uri+addresses[index]).then((response) => response.json())
-        var loc = responseJson["result"]["geometry"]["location"]
-        addMarker.call(this, loc["lat"], loc["lng"]);
-        totalX += loc["lat"]
-        totalY += loc["lng"]
+        var place_id = addresses[index]
+        if(place_id == "current")
+        {
+          addMarker.call(this, middleLat, middleLng);
+          totalX += middleLat
+          totalY += middleLng
+        }
+        else
+        {
+          const responseJson = await fetch(uri+place_id).then((response) => response.json())
+          var loc = responseJson["result"]["geometry"]["location"]
+          addMarker.call(this, loc["lat"], loc["lng"]);
+          totalX += loc["lat"]
+          totalY += loc["lng"]
+        }
       }
       midX = totalX/length
       midY = totalY/length

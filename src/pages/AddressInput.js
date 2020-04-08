@@ -16,14 +16,15 @@ import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import LocationItem from '../components/LocationItem.js';
 
 export default class App extends React.Component {
-    state = {textInput : [],
-             textInputValue : {}, 
-             Keyword: '', 
-             Transport: 'freeway', 
-             Range: 1500};
+    
     constructor(props)
     {
         super(props);
+        this.state = {textInput : [],
+            textInputValue : {}, 
+            Keyword: '', 
+            Transport: 'freeway', 
+            Range: 1500};
         this.addTextInput(0)
         this.addTextInput(1)
     }
