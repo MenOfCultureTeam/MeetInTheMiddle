@@ -9,14 +9,17 @@ import * as Animateable from 'react-native-animatable'
 export default class Profile_Welcome extends Component {
   render() {
     return (
+      
       <ImageBackground style={styles.container} 
       source={require('../images/userProfileBG.jpg')}>
+
         <Animateable.View animation="bounceInDown">
           <Image
-            style={{borderColor: 'white', borderWidth:5, borderRadius: 100, width: 180, height: 180, top: 90}}
+            style={{ width: 180, height: 180, top: 90}}
             source={require('../images/realuser.png')}
           />
         </Animateable.View>
+
         <Animateable.View style={styles.MainContainer} animation="bounceInRight">
           <Text style={styles.firstNameLB}>First Name:</Text>
           <TextInput
@@ -39,7 +42,10 @@ export default class Profile_Welcome extends Component {
             onSubmitEditing={() => this.password.focus()}
           />
         </Animateable.View>
+
+
         <Animateable.Text style={styles.AddressLB} animation="bounceInLeft">Address:</Animateable.Text>
+
         <Animateable.View style={styles.MainContainer2} animation="bounceInLeft">
           <TextInput
             style={styles.inputBox3}
@@ -51,6 +57,7 @@ export default class Profile_Welcome extends Component {
             onSubmitEditing={() => this.password.focus()}
           />
         </Animateable.View>
+
         <Animateable.Text style={styles.aptLB} animation="bounceInLeft">Appartment:</Animateable.Text>
         
         <Animateable.View animation="bounceInLeft">
@@ -81,6 +88,8 @@ export default class Profile_Welcome extends Component {
             />
           </View>
         </Animateable.View>
+
+
       </ImageBackground>
     );
   }
@@ -91,25 +100,25 @@ const styles = StyleSheet.create({
   buttonContainer: {
     top: 250,
     flexDirection: 'row',
-
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   MainContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    alignItems: 'center',
+    alignItems: 'center'
+    
   },
 
   MainContainer2: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-evenly'
   },
   firstNameLB:{
 
     top: 140,
     left:70,
-    fontSize: 18,
-    color:'#19194d',
+    fontSize: 30,
+    color:'#19194d'
   },
   inputBox: {
     height: 50,
@@ -117,7 +126,6 @@ const styles = StyleSheet.create({
     top: 140,
     left:138,
     fontSize: 18,
-    borderColor: 'black',
     elevation: 2
   },
   lastNameLB:{
@@ -125,29 +133,27 @@ const styles = StyleSheet.create({
     right: 163,
     fontSize: 18,
     color:'#19194d',
-  },
+    },
   inputBox2: {
     height: 50,
     width: 250,
     top: 210,
     right: 95,
-    fontSize: 18,
-    borderColor: 'black',
+    fontSize: 18,   
     elevation: 2
   },
   AddressLB:{
     top: 245,
     right:150,
     fontSize: 18,
-    color:'#19194d',
+    color:'#19194d'
   },
   inputBox3: {
     height: 50,
     width: 250,
     top: 208,
     left: 40,
-    fontSize: 18,
-    borderColor: 'black',
+    fontSize: 18,    
     elevation: 2
   },
   aptLB:{
@@ -161,8 +167,7 @@ const styles = StyleSheet.create({
     width: 250,
     top: 210,
     left: 40,
-    fontSize: 18,
-    borderColor: 'black',
+    fontSize: 18,   
     elevation: 2
   },
   firstNameLB:{
@@ -170,7 +175,7 @@ const styles = StyleSheet.create({
     top: 140,
     left:70,
     fontSize: 18,
-    color:'#19194d',
+    color:'#19194d'
   },
   container: {
     // flexGrow: 1,
@@ -194,6 +199,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     position: 'absolute',
   },
+
+
   MainHeadline: {
     marginVertical: 50,
     fontSize: 36,
