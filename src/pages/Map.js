@@ -342,6 +342,8 @@ export default class Map extends Component {
         <View style={styles.rectangle}>
           <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer}>
+            <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('FlatListDemo')}>
               <Image
                 source={require('../images/Message.png')}
                 style={{
@@ -351,6 +353,7 @@ export default class Map extends Component {
                   borderRadius: 150 / 2,
                 }}
               />
+              </TouchableOpacity>
             </View>
 
             <View style={styles.MainContainer2}>

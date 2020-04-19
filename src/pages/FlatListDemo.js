@@ -16,29 +16,9 @@ export class FlatListDemo extends Component {
     this.arrayholder = [];
   }
 
-  componentDidMount() {
-    this.makeRemoteRequest();
-  }
 
-  makeRemoteRequest = () => {
-    const url = `https://randomuser.me/api/?&results=20`;
-    this.setState({ loading: true });
 
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: res.results,
-          error: res.error || null,
-          loading: false,
-        });
-        this.arrayholder = res.results;
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
-  };
-
+ 
   renderSeparator = () => {
     return (
       <View
