@@ -149,8 +149,11 @@ export default class Login extends Component {
         if (this._isMounted) {
           this.setState({error: '', ErrorStatus: false});
         }
+        this.props.navigation.navigate('Map');
       }
       this.state.loading = false;
+
+      
       // setLoading(false);
     };
 
