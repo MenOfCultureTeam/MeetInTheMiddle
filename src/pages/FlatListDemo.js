@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity,Image } from 'react-native';
 import { ListItem, SearchBar } from 'react-native-elements';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
+import {FIREBASE_CONFIG} from '../core/config';
 
 export class FlatListDemo extends Component {
   constructor(props) {
@@ -81,6 +84,26 @@ export class FlatListDemo extends Component {
     );
   };
 
+//  readuserfriends() {
+//     return(
+//      firebase.database().ref('User info/').once('value', function (snapshot) {
+//          user.email = snapshot.val().email;
+//          user.name = snapshot.val().name;
+//          user.address = snapshot.val().address;
+//      })
+//     );
+//    }
+
+  readuserfriends() {
+     return(
+      firebase.database().ref('User info/').once('value', function (snapshot) {
+          user.email = snapshot.val().email;
+          user.name = snapshot.val().name;
+          user.address = snapshot.val().address;
+      })
+     );
+    }
+
   render() {
     if (this.state.loading) {
       return (
@@ -89,8 +112,13 @@ export class FlatListDemo extends Component {
         </View>
       );
     }
+
+    const userdata = this.readuserfriends();
+
+
     return (
-      
+        console.log(userdata),
+
       <View style={{ flex: 1 }}>
         <FlatList
           data={this.state.data}
@@ -105,7 +133,7 @@ export class FlatListDemo extends Component {
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />
-        
+
         <View style={styles.rectangle}>
         <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer2}>
@@ -134,7 +162,7 @@ export class FlatListDemo extends Component {
             </View>
             </View>
           </View>
-        </View>      
+        </View>
     );
   }
 }
