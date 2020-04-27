@@ -10,11 +10,12 @@ import {
   Platform,
   PermissionsAndroid,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import '@mapbox/polyline'
-
+import firebase from '@react-native-firebase/app';
 let id = 0;
 
 function calDistance(point1, point2)
@@ -295,6 +296,51 @@ export default class Map extends Component {
   }
   
   render() {
+
+    const editProfile = async () =>
+    {
+        if (firebase.auth().currentUser==null) {
+          Alert.alert(
+            "Currently Not Signed in",
+            "Login to use this feature",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "Login", onPress: () => this.props.navigation.navigate('Login') }
+            ],
+            { cancelable: false }
+          );
+        }
+        else{
+          this.props.navigation.navigate('Edit_Profile')
+        }
+    };
+    const chatRoom = async () =>
+    {
+        if (firebase.auth().currentUser==null) {
+          Alert.alert(
+            "Currently Not Signed in",
+            "Login to use this feature",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "Login", onPress: () => this.props.navigation.navigate('Login') }
+            ],
+            { cancelable: false }
+          );
+        }
+        else{
+          ////FlatListDemo
+          this.props.navigation.navigate('Chatroom')
+        }
+    };
+
     return (
       <View style={styles.container}>
         <MapView
@@ -343,7 +389,8 @@ export default class Map extends Component {
           <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer}>
             <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('FlatListDemo')}>
+              
+                onPress={chatRoom}>
               <Image
                 source={require('../images/Message.png')}
                 style={{
@@ -358,7 +405,7 @@ export default class Map extends Component {
 
             <View style={styles.MainContainer2}>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+                onPress={editProfile}>
                 <Image
                   source={require('../images/user.png')}
                   style={{height: 40, width: 40}}
