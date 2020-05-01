@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Platform, Image, Text, View} from 'react-native';
+import {StyleSheet, Platform, Image, Text, View,} from 'react-native';
 import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 // import the different screens
 import SignUp from './src/pages/Signup';
@@ -12,6 +12,10 @@ import AddressInput from './src/pages/AddressInput';
 import ForgotPassword from './src/pages/ForgotPassword';
 import LoginOrganism from './src/organisms/LoginOrganism'
 import SignupOrganism from './src/organisms/SignupOrganism'
+import {FlatListDemo} from "./src/pages/FlatListDemo";
+import Testpage from "./src/pages/Testpage"
+import Chatroom from "./src/pages/Chatroom"
+
 // create our app's navigation stack
 export default createAppContainer(
   createSwitchNavigator(
@@ -25,10 +29,13 @@ export default createAppContainer(
       AddressInput: AddressInput,
       ForgotPassword: ForgotPassword,
       LoginOrganism: LoginOrganism,
-      SignupOrganism: SignupOrganism
+      SignupOrganism: SignupOrganism,
+      Testpage: Testpage,
+      FlatListDemo: FlatListDemo,
+      Chatroom: Chatroom
     },
     {
-      initialRouteName: 'AuthLoadingScreen',
+      initialRouteName: 'Map',
     },
   ),
 );
