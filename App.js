@@ -15,7 +15,7 @@ import SignupOrganism from './src/organisms/SignupOrganism'
 import {FlatListDemo} from "./src/pages/FlatListDemo";
 import Testpage from "./src/pages/Testpage"
 import Chatroom from "./src/pages/Chatroom"
-
+import ChatMenu from "./src/pages/ChatMenu"
 // create our app's navigation stack
 export default createAppContainer(
   createSwitchNavigator(
@@ -32,10 +32,11 @@ export default createAppContainer(
       SignupOrganism: SignupOrganism,
       Testpage: Testpage,
       FlatListDemo: FlatListDemo,
-      Chatroom: Chatroom
+      Chatroom: Chatroom,
+      ChatMenu: ChatMenu
     },
     {
-      initialRouteName: 'Map',
+      initialRouteName: 'Chatroom',
     },
   ),
 );
