@@ -30,7 +30,7 @@ export default createAppContainer(
       SignupOrganism: SignupOrganism
     },
     {
-      initialRouteName: 'AuthLoadingScreen',
+      initialRouteName: 'Edit_Profile',
     },
   ),
 );

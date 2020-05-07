@@ -34,6 +34,7 @@ export default class Signup extends Component {
       username: '',
       email: '',
       password: '',
+      fullName: '',
       loading: false,
       error: '',
       ErrorStatus: false,
@@ -148,6 +149,17 @@ export default class Signup extends Component {
             secureTextEntry
             autoCapitalize="none"
           />
+          <TextInput
+            style={styles.inputBox}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder="Full Name"
+            placeholderTextColor="#C0C0C0"
+            selectionColor="#fff"
+            keyboardType="email-address"
+            returnKeyType="next"
+            value={this.state.fullName}
+            onChangeText={fullName => this.setState({fullName})}
+          />
 
           <TouchableOpacity style={styles.button} onPress={_onSignUpPressed}>
             <Text style={styles.buttonText}>Sign up</Text>
@@ -187,7 +199,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   rectangle: {
-    height: 450,
+    height: 530,
     width: Dimensions.get('window').width,
     backgroundColor: 'rgba(220, 220, 220, 0.6)',
     position: 'absolute',
