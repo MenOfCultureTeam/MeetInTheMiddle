@@ -5,7 +5,8 @@ import {
   View,
   TextInput,
   ScrollView,
-  ActivityIndicator,
+  TouchableOpacity,
+  Image,
   Button,
   Picker,
   Slider,
@@ -15,6 +16,10 @@ import {
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 
 import LocationItem from '../components/LocationItem.js';
+
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
+import Video from 'react-native-video';
 
 export default class App extends React.Component {
     
@@ -36,8 +41,7 @@ export default class App extends React.Component {
     textInput.push(
     <GoogleAutoComplete apiKey="AIzaSyA2ADvVjhV9plDSKkMZYHl3PM0fq1bT3OA" debounce={300} key={key}>
             {({ inputValue, handleTextChange, changeInput, locationResults, fetchDetails, clearSearch }) => (
-            <React.Fragment>
-                
+            <React.Fragment> 
                 <TextInput
                 style={styles.inputBox}
                 value={inputValue}
@@ -67,63 +71,66 @@ export default class App extends React.Component {
     }
     render() {
         return (
-            <View>
-            <View style={{height: 300}}>
-                <ScrollView>
-                    {this.state.textInput.map((value, index) => {
-                        return value
-                    })}
-                    <Button title='+' onPress={() => this.addTextInput(this.state.textInput.length)} color='orange'/>
-                </ScrollView>
-            </View>
-            
-            <TextInput
-                    style={styles.inputBox}
-                    underlineColorAndroid="rgba(0,0,0,0)"
-                    placeholder="Keyword (ex. cafe, taco, etc...)"
-                    placeholderTextColor="#C0C0C0"
-                    selectionColor="#fff"
-                    onChangeText={Keyword => this.setState({Keyword})}
-                    value={this.state.Keyword}
-            />
-            <Text style={{fontSize: 16}}>
-                Mode
-            </Text>
-            <Picker
-            selectedValue={this.state.Transport}
-            onValueChange={(itemValue, itemIndex) =>
-                this.setState({Transport: itemValue})
-            }>
-            <Picker.Item label="Freeway" value="freeway" />
-            <Picker.Item label="Local" value="local" />
-            
-            </Picker>
-                <Text style={{fontSize: 16}}>
-                    Range: {this.state.Range}
-                </Text>
-            <Slider
-                value={this.state.Range}
-                onValueChange={Range => this.setState({ Range })}
-                minimumValue = {1500}
-                maximumValue = {5000}
-            />
-            <View style={styles.buttonContainer}>
-                     <View style={styles.button}>
-                         <Button
-                            onPress={() => this.props.navigation.navigate('Map')}
-                            title="Back"
-                            color="orange"
+            <View style = {styles.containerBG}>
+                <Video
+                source={require('../images/loginAnimatedBG1.mp4')}
+                style={styles.backgroundVideo}
+                muted={true}
+                repeat={true}
+                resizeMode={'cover'}
+                rate={1.0}
+                ignoreSilentSwitch={'obey'}
+                />
+                <View style = {styles.topBar}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Map')}>
+                        <Image style={styles.returnIcon} source={require('../images/return.png')} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.containerInput}>
+                    <ScrollView>
+                        {this.state.textInput.map((value, index) => {
+                            return value
+                        })}
+                        <Button title='+' onPress={() => this.addTextInput(this.state.textInput.length)} color='orange'/>
+                    </ScrollView>
+                </View>
+                
+                <View style ={styles.containerKey}>
+                    <KeyboardAwareScrollView>
+                        <TextInput 
+                            style={styles.inputBox}
+                            underlineColorAndroid="rgba(0,0,0,0)"
+                            placeholder="Search Nearby Restaurant ..."
+                            placeholderTextColor="#C0C0C0"
+                            selectionColor="#fff"
+                            onChangeText={Keyword => this.setState({Keyword})}
+                            value={this.state.Keyword}
                         />
-                    </View>
-                    <View style={styles.button}>
-                        <Button
-                            onPress={() => this.props.navigation.navigate('Map', {Addresses: this.state.textInputValue, Keyword: this.state.Keyword,
-                            Transport: this.state.Transport, Range: this.state.Range})}
-                            title="Find the Middle"
-                            color="orange"
-                        />
-                    </View>
-            </View>
+                    </KeyboardAwareScrollView>
+                    <Text style={styles.pickerText}>Mode</Text>
+                    <Picker
+                        selectedValue={this.state.Transport}
+                        onValueChange={(itemValue, itemIndex) =>
+                            this.setState({Transport: itemValue})
+                    }>
+                        <Picker.Item label="Freeway" value="freeway" />
+                        <Picker.Item label="Local" value="local" />
+                    </Picker>
+                    <Text style={styles.sliderText}>
+                        Range: {this.state.Range}
+                    </Text>
+                    <Slider style={styles.slider}
+                        value={this.state.Range}
+                        onValueChange={Range => this.setState({ Range })}
+                        minimumValue = {1500}
+                        maximumValue = {5000}
+                    />
+                </View>
+                <TouchableOpacity style ={styles.searchBtn} onPress={() => this.props.navigation.navigate('Map', {Addresses: this.state.textInputValue, Keyword: this.state.Keyword,
+                    Transport: this.state.Transport, Range: this.state.Range})}>
+                    <Text style={styles.buttonText}>Search</Text>
+                </TouchableOpacity>
+
             </View>
             
       )
@@ -131,38 +138,100 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+    //BG part
+    containerBG: {
+        height:'100%',
+        flexDirection: 'column',
+        alignItems:'center',
+        backgroundColor: 'rgba(222, 222, 222, 1)'
     },
-    inputWrapper: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+    backgroundVideo: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+      },
+    //Top bar
+    topBar: {
+        width:'100%',
+        backgroundColor: 'white',
+        elevation: 9,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        padding:5,
     },
-    button: {paddingHorizontal: 10},
-    buttonContainer: {
-        top: 100,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+    //Address part
+    containerInput:{
+        width:'95%',
+        height:'35%',
+        backgroundColor: 'rgb(244, 244, 244)',
+        borderRadius: 20,
+        padding:10,
+        elevation: 5,
+        top:15,
+        opacity: 0.9,
     },
+
     inputBox: {
-        borderRadius: 25,
-        backgroundColor: 'rgba(255, 255,255,1)',
-        // borderRadius: 25,
+        backgroundColor: 'rgba(255, 255, 255, 1)',
+        borderWidth: 1,
+        borderColor: '#dcdcdc',
+        borderRadius: 7,
+        elevation: 8,
         paddingHorizontal: 16,
         fontSize: 16,
-        color: 'rgba(0, 0,0,1)',
+        color: 'rgba(0, 0, 0 ,1)',
         marginVertical: 10,
     },
-    buttonText: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: 'orange',
-        textAlign: 'center',
-        height: 100,
+    //Key part
+    containerKey:{
+        width:'95%',
+        height:'35%',
+        backgroundColor: 'rgb(244, 244, 244)',
+        borderRadius: 20,
+        padding:10,
+        elevation: 5,
+        top:25,
+        opacity: 0.9,
+        //justifyContent:'space-between',
     },
+    pickerText:{
+        fontSize: 18,
+        textShadowColor: 'rgba(108, 122, 137, 1)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 1
+    },
+    sliderText:{
+        fontSize: 18,
+        textShadowColor: 'rgba(108, 122, 137, 1)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 1
+    },
+    slider:{
+        top:3
+    },
+    //Button Container part
+    searchBtn: {
+        top:35,
+        height:'18%',
+        width: '35%',  //The Width must be the same as the height
+        borderRadius: 1000, //Then Make the Border Radius twice the size of width or Height   
+        backgroundColor:'#1e90ff',
+        alignItems:'center',
+        justifyContent:'center',
+        elevation: 8,
+    },
+
+    buttonText:{
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: '#ffffff',
+        textAlign: 'center',
+        textShadowColor: 'rgba(108, 122, 137, 1)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 1
+    }
 });
 
 

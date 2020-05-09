@@ -5,10 +5,9 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
   Dimensions,
-  Alert,
-} from 'react-native';
+} 
+from 'react-native';
 import {emailValidator, passwordValidator} from '../core/utils';
 import {loginUser} from '../api/auth-api';
 import Logo from '../components/Logo';

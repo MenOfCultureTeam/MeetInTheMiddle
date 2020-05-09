@@ -83,27 +83,33 @@ export default class Edit_Profile extends Component {
         </View>
 
         <View style={styles.editContent}>
-          <View style ={styles.fullNameBar}>
+        <Animateable.View
+          style={styles.fullNameBar}
+          animation="fadeInLeft">
             <ImageBackground source={require('../images/fullNameIcon.png')} style={styles.fullNameIcon}>
             </ImageBackground>
             <Text></Text>
             <Text style={styles.fullNameBox}>122</Text>
             <Text></Text>
-          </View>
-          <View style ={styles.usernameBar}>
-            <ImageBackground source={require('../images/usernameIcon.png')} style={styles.usernameIcon}>
+          </Animateable.View>
+          <Animateable.View
+          style={styles.usernameBar}
+          animation="fadeInRight">
+            <ImageBackground source={require('../images/usernameIcon.png')} style={styles.fullNameIcon}>
             </ImageBackground>
             <Text></Text>
-            <Text style={styles.usernameBox}>123</Text>
+            <Text style={styles.usernameBox}>122</Text>
             <Text></Text>
-          </View>
-          <View style ={styles.passwordBar}>
+          </Animateable.View>
+          <Animateable.View
+          style={styles.passwordBar}
+          animation="fadeInLeft">
             <ImageBackground source={require('../images/passwordIcon.png')} style={styles.passwordIcon}>
             </ImageBackground>
             <Text></Text>
             <Text style={styles.passwordBox}>124</Text>
             <Text></Text>
-          </View>
+          </Animateable.View>
           <TouchableOpacity style ={styles.loggoutBtn} onPress={() => logoutUser()}>
             <Text style={styles.buttonText}>Log out</Text>
           </TouchableOpacity>
@@ -187,14 +193,12 @@ const styles = StyleSheet.create({
 
   },
   userPicName:{
-    flexDirection:'column',
-    flex:11,
-    justifyContent:'flex-end',
-    margin:7,
-    padding:19
+    flexDirection:'row',
+    flex:5,
+    justifyContent:'space-between',
   },
   editContent:{
-    flex:1,
+    flex:3,
     backgroundColor: '#ffffff',
     justifyContent:'space-around'
   },
@@ -206,11 +210,12 @@ const styles = StyleSheet.create({
     textAlign:'left'
   },
   avatar:{
-    flex:13,
+    flex: 3,
     borderColor: '#969696', 
     borderWidth:3, 
-    borderRadius: 100, 
-    width: 200, 
+    borderRadius: 300, 
+    height: 200,
+    width: 70, 
     alignSelf:'flex-end'
   },
   fullNameBar:{
@@ -286,6 +291,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
+    textShadowColor: 'rgba(108, 122, 137, 1)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 2
   },  
   rectangle: {
     elevation: 15,
