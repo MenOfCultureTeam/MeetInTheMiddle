@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     elevation: 9,
     flexDirection:'row',
     justifyContent:'space-between',
-    padding:10,
+    padding:14,
   },
   returnIcon:{
 

@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.29,
     shadowRadius: 4.65,
     elevation: 7,
-    paddingTop:18,
+    paddingTop:15,
     paddingLeft:8
     //flexDirection: 'row',
     //paddingTop: '5%',
