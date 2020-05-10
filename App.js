@@ -6,6 +6,8 @@ import SignUp from './src/pages/Signup';
 import Login from './src/pages/Login';
 import AuthLoadingScreen from './src/pages/AuthLoadingScreen';
 import Map from './src/pages/Map';
+import friendList from './src/pages/friendList';
+import addFriend from './src/pages/addFriend';
 import Edit_Profile from './src/pages/Edit_Profile';
 import Edit_Profile1 from './src/pages/Edit_Profile1';
 import Profile_Welcome from './src/pages/Profile_Welcome';
@@ -21,6 +23,8 @@ export default createAppContainer(
       Login: Login,
       AuthLoadingScreen: AuthLoadingScreen,
       Map: Map,
+      friendList: friendList,
+      addFriend: addFriend,
       Edit_Profile: Edit_Profile,
       Edit_Profile1: Edit_Profile1,
       Profile_Welcome: Profile_Welcome,

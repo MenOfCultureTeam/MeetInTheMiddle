@@ -469,15 +469,17 @@ export default class Map extends Component {
         <View style={styles.rectangle}>
           <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer}>
-              <Image
-                source={require('../images/Message.png')}
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderColor: 'black',
-                  borderRadius: 150 / 2,
-                }}
-              />
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('friendList')}>
+                <Image
+                  source={require('../images/Message.png')}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderColor: 'black',
+                    borderRadius: 150 / 2,
+                  }}
+                />
+              </TouchableOpacity>
             </View>
 
             <View style={styles.MainContainer2}>

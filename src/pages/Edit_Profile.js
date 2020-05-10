@@ -118,15 +118,17 @@ export default class Edit_Profile extends Component {
         <View style={styles.rectangle}>
           <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer}>
-              <Image
-                source={require('../images/Message.png')}
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderColor: 'black',
-                  borderRadius: 150 / 2,
-                }}
-              />
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('friendList')}>
+                <Image
+                  source={require('../images/Message.png')}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderColor: 'black',
+                    borderRadius: 150 / 2,
+                  }}
+                />
+              </TouchableOpacity>
             </View>
 
             <View style={styles.MainContainer2}>
@@ -175,9 +177,11 @@ const styles = StyleSheet.create({
     right: 0,
   },
   editContent:{
+    flex:3,
     width: '100%',
     height:'62%',
-    backgroundColor:'#FFFFFF'
+    backgroundColor:'#FFFFFF',
+    justifyContent:'space-around'
   },
   topBar:{
     flex:1,
@@ -196,11 +200,6 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     flex:5,
     justifyContent:'space-between',
-  },
-  editContent:{
-    flex:3,
-    backgroundColor: '#ffffff',
-    justifyContent:'space-around'
   },
   fullName:{
     flex:4,
