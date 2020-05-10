@@ -1,225 +1,346 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, TextInput, Button, ImageBackground} from 'react-native';
+import {StyleSheet, Dimensions, Text, View, Image, TextInput, Button,TouchableOpacity, ImageBackground} from 'react-native';
 import {logoutUser} from '../api/auth-api';
 
 //Feb 16, make sure you npm install react-native-animatable --save
 //import animateable library
-import * as Animateable from 'react-native-animatable'
+import * as Animateable from 'react-native-animatable';
 
-export default class Profile_Welcome extends Component {
+//Apr 6, imagepicker
+import ImagePicker from 'react-native-image-picker';
+
+import Video from 'react-native-video';
+//import storage from '@react-native-firebase/storage'
+
+export default class Edit_Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      avatarSource: require('../images/user.png'),
+    };
+  }
+
+  selectFile = () => {
+    var options = {
+      title: 'Select Image',
+      customButtons: [
+        { 
+          name: 'customOptionKey', 
+          title: 'Choose file from Custom Option' 
+        },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', res.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', res.customButton);
+        alert(response.customButton);
+      } else {
+        let source = {uri:response.uri};
+        this.setState({
+          avatarSource: source,
+        });
+      }
+    });
+  };
+  //updateprofile(firstname,lastname, address, source.uri,)
   render() {
     return (
-      
-      <ImageBackground style={styles.container} 
-      source={require('../images/userProfileBG.jpg')}>
-
-        <Animateable.View animation="bounceInDown">
-          <Image
-            style={{ width: 180, height: 180, top: 90}}
-            source={require('../images/realuser.png')}
+      <View style={styles.container}>
+        <View style={styles.bgContainer}>
+          <Video
+            source={require('../images/profileBG.mp4')}
+            style={styles.backgroundVideo}
+            muted={true}
+            repeat={true}
+            resizeMode={'cover'}
+            rate={1.0}
+            ignoreSilentSwitch={'obey'}
           />
-        </Animateable.View>
-
-        <Animateable.View style={styles.MainContainer} animation="bounceInRight">
-          <Text style={styles.firstNameLB}>First Name:</Text>
-          <TextInput
-            style={styles.inputBox}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Jack"
-            placeholderTextColor="#C0C0C0"
-            selectionColor="#fff"
-            keyboardType="default"
-            onSubmitEditing={() => this.password.focus()}
-          />
-          <Text style={styles.lastNameLB}>Last Name:</Text>
-          <TextInput
-            style={styles.inputBox2}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Robinson"
-            placeholderTextColor="#C0C0C0"
-            selectionColor="#fff"
-            keyboardType="default"
-            onSubmitEditing={() => this.password.focus()}
-          />
-        </Animateable.View>
-
-
-        <Animateable.Text style={styles.AddressLB} animation="bounceInLeft">Address:</Animateable.Text>
-
-        <Animateable.View style={styles.MainContainer2} animation="bounceInLeft">
-          <TextInput
-            style={styles.inputBox3}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="3315 Maple Wood Ave."
-            placeholderTextColor="#C0C0C0"
-            selectionColor="#fff"
-            keyboardType="default"
-            onSubmitEditing={() => this.password.focus()}
-          />
-        </Animateable.View>
-
-        <Animateable.Text style={styles.aptLB} animation="bounceInLeft">Appartment:</Animateable.Text>
-        
-        <Animateable.View animation="bounceInLeft">
-          <TextInput
-            style={styles.inputBox4}
-            underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Apt #6A"
-            placeholderTextColor="#C0C0C0"
-            selectionColor="#fff"
-            keyboardType="default"
-            onSubmitEditing={() => this.password.focus()}
-          />
-        </Animateable.View>
-
-        <Animateable.View style={styles.buttonContainer} animation="zoomIn">
-          <View style={styles.button}>
-            <Button
-              onPress={() => this.props.navigation.navigate('Map')}
-              title="Save Changes"
-              color="orange"
-            />
+          <View style ={styles.topBar}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Map')}>
+              <Image style={styles.returnIcon} source={require('../images/return.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Edit_Profile1')}>
+              <Image style={styles.settingIcon} source={require('../images/editIcon.png')} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.button}>
-            <Button
-              onPress={() => logoutUser()}
-              title="Sign Out"
-              color="orange"
-            />
+          <View style ={styles.userPicName}>
+            <Text style={styles.fullName}>EmailAddress</Text>
+            <Image style={styles.avatar} source ={this.state.avatarSource}/>
           </View>
-        </Animateable.View>
+        </View>
 
+        <View style={styles.editContent}>
+        <Animateable.View
+          style={styles.fullNameBar}
+          animation="fadeInLeft">
+            <ImageBackground source={require('../images/fullNameIcon.png')} style={styles.fullNameIcon}>
+            </ImageBackground>
+            <Text></Text>
+            <Text style={styles.fullNameBox}>122</Text>
+            <Text></Text>
+          </Animateable.View>
+          <Animateable.View
+          style={styles.usernameBar}
+          animation="fadeInRight">
+            <ImageBackground source={require('../images/usernameIcon.png')} style={styles.fullNameIcon}>
+            </ImageBackground>
+            <Text></Text>
+            <Text style={styles.usernameBox}>122</Text>
+            <Text></Text>
+          </Animateable.View>
+          <Animateable.View
+          style={styles.passwordBar}
+          animation="fadeInLeft">
+            <ImageBackground source={require('../images/passwordIcon.png')} style={styles.passwordIcon}>
+            </ImageBackground>
+            <Text></Text>
+            <Text style={styles.passwordBox}>124</Text>
+            <Text></Text>
+          </Animateable.View>
+          <TouchableOpacity style ={styles.loggoutBtn} onPress={() => logoutUser()}>
+            <Text style={styles.buttonText}>Log out</Text>
+          </TouchableOpacity>
+        </View>
 
-      </ImageBackground>
+        <View style={styles.rectangle}>
+          <View style={styles.MainContainerMain}>
+            <View style={styles.MainContainer}>
+              <Image
+                source={require('../images/Message.png')}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderColor: 'black',
+                  borderRadius: 150 / 2,
+                }}
+              />
+            </View>
+
+            <View style={styles.MainContainer2}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+                <Image
+                  source={require('../images/user.png')}
+                  style={{height: 40, width: 40}}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.MainContainer3}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('AddressInput')}>
+              <Image
+                source={require('../images/Location.png')}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderColor: 'black',
+                  borderRadius: 150 / 2,
+                }}
+              />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  button: {paddingHorizontal: 10},
-  buttonContainer: {
-    top: 250,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+  container: {
+    flex: 1, 
   },
-  MainContainer: {
+  bgContainer:{
+    height:'38%'
+  },
+  backgroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+  editContent:{
+    width: '100%',
+    height:'62%',
+    backgroundColor:'#FFFFFF'
+  },
+  topBar:{
+    flex:1,
+    elevation: 9,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    padding:10,
+  },
+  returnIcon:{
+
+  },
+  settingIcon:{
+
+  },
+  userPicName:{
+    flexDirection:'row',
+    flex:5,
+    justifyContent:'space-between',
+  },
+  editContent:{
+    flex:3,
+    backgroundColor: '#ffffff',
+    justifyContent:'space-around'
+  },
+  fullName:{
+    flex:4,
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#808080',
+    textAlign:'left'
+  },
+  avatar:{
+    flex: 3,
+    borderColor: '#969696', 
+    borderWidth:3, 
+    borderRadius: 300, 
+    height: 200,
+    width: 70, 
+    alignSelf:'flex-end'
+  },
+  fullNameBar:{
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent:'space-around',
+    alignItems: 'center',
+  },
+  fullNameIcon:{
+    width: 61,
+    height: 61,
+    borderRadius: 150/2,
+    backgroundColor: '#ffffff',
+    elevation: 9,
+  },
+  fullNameBox:{
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#808080',
+    textAlign:'center'
+  },
+  usernameBar:{
+    flexDirection: 'row',
+    justifyContent:'space-around',
     alignItems: 'center'
+  },
+  usernameIcon:{
+    width: 61,
+    height: 61,
+    borderRadius: 150/2,
+    backgroundColor: '#ffffff',
+    elevation: 9,
+  },
+  usernameBox:{
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#808080',
+    textAlign:'center'
+  },
+  passwordBar:{
+    flexDirection: 'row',
+    justifyContent:'space-around',
+    alignItems: 'center'
+  },
+  passwordIcon:{
+    width: 61,
+    height: 61,
+    borderRadius: 150/2,
+    backgroundColor: '#ffffff',
+    elevation: 9,
+  },
+  passwordBox:{
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#808080',
+    textAlign:'center'
+  },
+  emailBar:{
+    flexDirection: 'row',
+    justifyContent:'space-around'
+  },
+  loggoutBtn:{
+    width: '80%',
+    height: 55,
+    backgroundColor: '#1e90ff',
+    borderRadius: 25,
+    marginVertical: 10,
+    paddingVertical: 5,
+    elevation: 7,
+    alignSelf:'center'
+  },
+  buttonText:{
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
+    textShadowColor: 'rgba(108, 122, 137, 1)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 2
+  },  
+  rectangle: {
+    elevation: 15,
+    height:60,
+    justifyContent: 'center',
+    width: Dimensions.get('window').width,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    bottom:0,
+    borderColor: '#f5f5f5',
+    borderWidth: 2,
+  },
+  MainContainerMain: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'space-between',
+  },
+  container: {
+    // ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  MainContainer:{
+    height: 40,
+    width: 40,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    marginHorizontal:'10%'  
     
   },
 
   MainContainer2: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly'
-  },
-  firstNameLB:{
-
-    top: 140,
-    left:70,
-    fontSize: 30,
-    color:'#19194d'
-  },
-  inputBox: {
-    height: 50,
-    width: 250,
-    top: 140,
-    left:138,
-    fontSize: 18,
-    elevation: 2
-  },
-  lastNameLB:{
-    top: 210,
-    right: 163,
-    fontSize: 18,
-    color:'#19194d',
-    },
-  inputBox2: {
-    height: 50,
-    width: 250,
-    top: 210,
-    right: 95,
-    fontSize: 18,   
-    elevation: 2
-  },
-  AddressLB:{
-    top: 245,
-    right:150,
-    fontSize: 18,
-    color:'#19194d'
-  },
-  inputBox3: {
-    height: 50,
-    width: 250,
-    top: 208,
-    left: 40,
-    fontSize: 18,    
-    elevation: 2
-  },
-  aptLB:{
-    top: 247,
-    right:144,
-    fontSize: 18,
-    color:'#19194d',
-  },
-  inputBox4: {
-    height: 50,
-    width: 250,
-    top: 210,
-    left: 40,
-    fontSize: 18,   
-    elevation: 2
-  },
-  firstNameLB:{
-
-    top: 140,
-    left:70,
-    fontSize: 18,
-    color:'#19194d'
-  },
-  container: {
-    // flexGrow: 1,
-    height: 200,
-    width: 410,
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  LoginText: {
-    marginVertical: 50,
-    fontSize: 36,
-    color: 'black',
-    fontWeight: 'bold',
-    position: 'absolute',
-  },
-  SignupText: {
-    marginVertical: 45,
-    fontSize: 36,
-    color: 'rgba(255, 255, 255, 1)',
-    fontWeight: 'bold',
-    position: 'absolute',
+    height: 40,
+    width: 40,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    marginHorizontal:'10%'  
   },
 
-
-  MainHeadline: {
-    marginVertical: 50,
-    fontSize: 36,
-    color: 'rgba(255, 255, 255, 1)',
-    fontWeight: 'bold',
-    position: 'absolute',
-  },
-
-  rectangle: {
-    justifyContent: 'center',
-    flex: 2,
-    height: 200,
-    width: 200,
-    alignItems: 'center',
-    backgroundColor: '#403E3F',
-    position: 'absolute',
-    alignSelf: 'center',
-    top: 95,
-    borderColor: 'rgba(255,255,255,0.2)',
-    borderWidth: 1,
-  },
+  MainContainer3:{
+    height: 40,
+    width: 40,
+    backgroundColor: 'white',
+    borderColor: 'white',
+    marginHorizontal:'10%'  
+  }
 });
