@@ -160,7 +160,7 @@ export default class Chatroom extends Component{
     <View style={styles.usersContainer}>
       <Text style={styles.UsersInChat}>Users: </Text>
 
-      {Object.keys(this.state.recipients).map((item)=>( <Text style={styles.UsersInChat}> {item} </Text> )) }
+      {Object.keys(this.state.recipients).map((item,i)=>( <Text style={styles.UsersInChat} key={i} > {item} </Text> )) }
     </View>
       
       {/* https://react-native-elements.github.io/react-native-elements/docs/listitem.html */}
@@ -226,11 +226,13 @@ export default class Chatroom extends Component{
 
   componentDidMount() {
     // this.isMounted=false;
+    this.setRecipients();
+    
     if(!this.checkIfChatroomMade(room).exists){
       this.createChatroomInUsers(recipientsIDs);
     }
 
-    this.setRecipients();
+
 
     this.on(message =>
       this.setState(previousState => ({
