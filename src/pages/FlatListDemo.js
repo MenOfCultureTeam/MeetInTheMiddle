@@ -43,60 +43,37 @@ export class FlatListDemo extends Component {
 
   setUserInfoItem = async (snap, contacts) => {
     var items = []
-    let data =  snap.docs;
-    await Promise.all(await data.map(async (data) => {
-      if(data.key in contacts){
-        let username = await this.readUserIDs(data.key);
-        let test = data.val();
-        test.UserID=data.key;
-        test.Username=username.val().username;
-        console.log(test);
-        items.push(test);//
+
+    let test = await snap.val();
+    // console.log(test);
+    await Promise.all(Object.keys(test).map(async (key) => {
+      if(key in contacts){
+        let username = await this.readUserIDs(key);
+        let data = test[key];
+
+        data.UserID=key;
+        data.Username=username.val().username;
+
+        items.push(data);
       }
     }))
-    
+
     return items
   }
 
 
    makeRemoteRequest = async () => {
-
+    this.setState({ loading: true });
     let userids = await this.readUsers(this.uid);
     let contacts = userids.val().Contacts; //list of userids of your contacts
-
     var test=[]
     const snapshot = await this.readDatabase();
     test = await this.setUserInfoItem(snapshot, contacts);
-    console.log(test);
-
-
-    // this.setState({data:})
-    // let userinfo = await this.readUserInfo(userids);
-    // let items = await this.setUserInfoItem(userinfo);
-   
-    // const data={
-
-    // }
-    
-
-
-
-    const url = `https://randomuser.me/api/?&results=20`;
-    this.setState({ loading: true });
-
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: res.results,
-          error: res.error || null,
-          loading: false,
-        });
-        this.arrayholder = res.results;
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
+    // console.log(test);
+    this.setState({data:test,
+                  error: null,
+                  loading: false,})
+    this.arrayholder = test;
   };
 
   renderSeparator = () => {
@@ -118,7 +95,7 @@ export class FlatListDemo extends Component {
     });
 
     const newData = this.arrayholder.filter(item => {
-      const itemData = `${item.name.title.toUpperCase()} ${item.name.first.toUpperCase()} ${item.name.last.toUpperCase()}`;
+      const itemData = `${item.Username.toUpperCase()} ${item.FirstName.toUpperCase()} ${item.LastName.toUpperCase()}`;
       const textData = text.toUpperCase();
 
       return itemData.indexOf(textData) > -1;
@@ -140,6 +117,10 @@ export class FlatListDemo extends Component {
       />
     );
   };
+  generateChatId(frienduid) {
+    if (this.uid > frienduid) return `${this.uid}-${frienduid}`;
+    else return `${frienduid}-${this.uid}`;
+  }
 
   render() {
     if (this.state.loading) {
@@ -156,12 +137,15 @@ export class FlatListDemo extends Component {
           data={this.state.data}
           renderItem={({ item }) => (
             <ListItem
-              leftAvatar={{ source: { uri: item.picture.thumbnail } }}
-              title={`${item.name.first} ${item.name.last}`}
-              subtitle={item.email}
+              leftAvatar={{ source: { uri: item.Photo } }}
+              title={item.Username}
+              subtitle={`${item.FirstName} ${item.LastName}`}
+              onPress={() => this.props.navigation.navigate('Chatroom', {room:this.generateChatId(item.UserID),
+                username:this.state.name,
+                recipients:[this.uid,item.UserID]})}
             />
           )}
-          keyExtractor={item => item.email}
+          keyExtractor={item => item.UserID}
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
         />

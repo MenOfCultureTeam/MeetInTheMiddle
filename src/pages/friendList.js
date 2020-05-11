@@ -34,7 +34,7 @@ export default class friendList extends Component {
                 <Image style={styles.returnIcon} source={require('../images/return.png')} />
             </TouchableOpacity>
             <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('addFriend')}>
+                onPress={() => this.props.navigation.navigate('ChatMenu')}>
                 <Image style={styles.settingIcon} source={require('../images/editIcon.png')} />
             </TouchableOpacity>
         </View>

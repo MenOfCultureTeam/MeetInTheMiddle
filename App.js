@@ -42,7 +42,7 @@ export default createAppContainer(
       ChatMenu: ChatMenu
     },
     {
-      initialRouteName: 'FlatListDemo',
+      initialRouteName: 'Signup',
     },
   ),
 );
