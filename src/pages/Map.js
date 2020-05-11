@@ -330,7 +330,7 @@ export default class Map extends Component {
                 onPress: () => console.log("Cancel Pressed"),
                 style: "cancel"
               },
-              { text: "Login", onPress: () => this.props.navigation.navigate('Login') }
+              { text: "Login", onPress: () => this.props.navigation.navigate('friendList') }
             ],
             { cancelable: false }
           );
