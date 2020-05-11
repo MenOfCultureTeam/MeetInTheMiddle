@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity,Image } from 'react-native';
 import { ListItem, SearchBar } from 'react-native-elements';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
 
 export class FlatListDemo extends Component {
   constructor(props) {
@@ -12,13 +14,91 @@ export class FlatListDemo extends Component {
       data: [],
       error: null,
     };
-
+    this.user=firebase.auth().currentUser;
+    this.uid=this.user.uid;
+    
     this.arrayholder = [];
+  }
+  getRef() {
+    return firebase.database().ref();
+  }
+  componentDidMount() {
+    this.makeRemoteRequest();
+  }
+
+  readUsers = async (_id) => {
+    let promise = this.getRef().child("Users/"+_id).once("value")
+    return await promise;
+  }
+
+  readDatabase = async () => {
+    let promise = this.getRef().child("Users/").once("value")
+    return await promise;
+  }
+
+  readUserIDs = async (userid) => {
+    let promise = this.getRef().child("UserIDs/"+userid).once("value")
+    return await promise;
+  }
+
+  setUserInfoItem = async (snap, contacts) => {
+    var items = []
+    let data =  snap.docs;
+    await Promise.all(await data.map(async (data) => {
+      if(data.key in contacts){
+        let username = await this.readUserIDs(data.key);
+        let test = data.val();
+        test.UserID=data.key;
+        test.Username=username.val().username;
+        console.log(test);
+        items.push(test);//
+      }
+    }))
+    
+    return items
   }
 
 
+   makeRemoteRequest = async () => {
 
- 
+    let userids = await this.readUsers(this.uid);
+    let contacts = userids.val().Contacts; //list of userids of your contacts
+
+    var test=[]
+    const snapshot = await this.readDatabase();
+    test = await this.setUserInfoItem(snapshot, contacts);
+    console.log(test);
+
+
+    // this.setState({data:})
+    // let userinfo = await this.readUserInfo(userids);
+    // let items = await this.setUserInfoItem(userinfo);
+   
+    // const data={
+
+    // }
+    
+
+
+
+    const url = `https://randomuser.me/api/?&results=20`;
+    this.setState({ loading: true });
+
+    fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          data: res.results,
+          error: res.error || null,
+          loading: false,
+        });
+        this.arrayholder = res.results;
+      })
+      .catch(error => {
+        this.setState({ error, loading: false });
+      });
+  };
+
   renderSeparator = () => {
     return (
       <View

@@ -21,9 +21,9 @@ const styles = {
     },
     onBottom: {},
     image: {
-      height: 36,
-      width: 36,
-      borderRadius: 18,
+      height: 50,
+      width: 50,
+      borderRadius: 10,
     },
   }),
   right: StyleSheet.create({

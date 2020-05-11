@@ -38,7 +38,7 @@ export default createAppContainer(
       ChatMenu: ChatMenu
     },
     {
-      initialRouteName: 'Chatroom',
+      initialRouteName: 'FlatListDemo',
     },
   ),
 );

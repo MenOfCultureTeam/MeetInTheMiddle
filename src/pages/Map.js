@@ -337,7 +337,7 @@ export default class Map extends Component {
         }
         else{
           ////FlatListDemo
-          this.props.navigation.navigate('Chatroom')
+          this.props.navigation.navigate('ChatMenu')
         }
     };
 
