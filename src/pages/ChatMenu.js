@@ -3,10 +3,8 @@ import React , {Component} from 'react';
 
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
-import {FlatList,Text,View,Image,StyleSheet, TouchableOpacity} from 'react-native';
+import {FlatList,Text,View,Image,StyleSheet, TouchableOpacity, Dimensions,  TextInput, Button, ImageBackground} from 'react-native';
 import { ListItem } from 'react-native-elements';
-
-
 
 
 
@@ -32,7 +30,9 @@ export default class ChatMenu extends Component{
   getRef() {
     return firebase.database().ref();
   }
-
+  getUsers(chatroomid){
+    this.getRef().child("Users/").orderByChild()
+  }
   listenforitems(chatroomsref){
     chatroomsref.on("value", snap => {
         var items = [];
@@ -54,17 +54,18 @@ export default class ChatMenu extends Component{
 
   }
   render() {
-    const chatRoom = async (room,friendname) =>
-    {
-      //TODO: must check if friend exists before updating 
-      this.getRef().child("Users/"+friendname+"/Rooms/"+room).update({associated:"true"})
-    };
 
     return (
-      <View>
+      <View style={styles.container}>
+            <View style ={styles.topBar}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('friendList')}>
+                <Image style={styles.returnIcon} source={require('../images/return.png')} />
+                </TouchableOpacity>
+            </View>
+        <View style={styles.editContent}>
         <Text>Chatrooms:</Text>
-        {/* https://react-native-elements.github.io/react-native-elements/docs/listitem.html */}
-        <FlatList 
+          {/* https://react-native-elements.github.io/react-native-elements/docs/listitem.html */}
+          <FlatList 
                 keyExtractor={this.keyExtractor}
                 data={this.state.chatrooms}
                 renderItem={({ item }) => (
@@ -76,21 +77,52 @@ export default class ChatMenu extends Component{
                                                                                  username:this.state.name})}/>
                               )}
                       />
-        <View style={styles.MainContainer}>
-          <TouchableOpacity
-            onPress={() => chatRoom("room123","Valiant")}>
-            <Image
-              source={require('../images/Message.png')}
-              style={{
-                width: 40,
-                height: 40,
-                borderColor: 'black',
-                borderRadius: 150 / 2,
-              }} />
-            </TouchableOpacity>
+        </View>
+
+        <View style={styles.rectangle}>
+            <View style={styles.MainContainerMain}>
+                <View style={styles.MainContainer}>
+                    <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('friendList')}>
+                        <Image
+                            source={require('../images/Message.png')}
+                            style={{
+                            width: 40,
+                            height: 40,
+                            borderColor: 'black',
+                            borderRadius: 150 / 2,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.MainContainer2}>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+                        <Image
+                            source={require('../images/user.png')}
+                            style={{height: 40, width: 40}}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.MainContainer3}>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('AddressInput')}>
+                        <Image
+                            source={require('../images/Location.png')}
+                            style={{
+                            width: 40,
+                            height: 40,
+                            borderColor: 'black',
+                            borderRadius: 150 / 2,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
       </View>
-
     );
   }
 
@@ -98,13 +130,64 @@ export default class ChatMenu extends Component{
 
 
 const styles = StyleSheet.create({
+  //Main Container
+  container: {
+      flex: 1,
+      justifyContent:'space-between'
+  },
+  //Top Bar Container
+  topBar:{
+      elevation: 9,
+      flexDirection:'row',
+      justifyContent:'space-between',
+      padding:10,
+      backgroundColor:'white'
+  },
+  returnIcon:{
 
+  },
+  // Content Container
+  editContent:{
+      flex:2,
+      width: '100%',
+      backgroundColor:'#FFFFFF'
+      },
+  // Footer Container
+  rectangle: {
+      elevation: 15,
+      height:60,
+      justifyContent: 'center',
+      width: Dimensions.get('window').width,
+      alignItems: 'center',
+      backgroundColor: 'white',
+      bottom:0,
+      borderColor: '#f5f5f5',
+      borderWidth: 2,
+  },
+  MainContainerMain: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignContent: 'space-between',
+  },
   MainContainer:{
-    height: 40,
-    width: 40,
-    backgroundColor: 'white',
-    borderColor: 'white',
-    marginHorizontal:'10%'  
-    
+      height: 40,
+      width: 40,
+      backgroundColor: 'white',
+      borderColor: 'white',
+      marginHorizontal:'10%'     
+  },
+  MainContainer2: {
+      height: 40,
+      width: 40,
+      backgroundColor: 'white',
+      borderColor: 'white',
+      marginHorizontal:'10%'  
+  },
+  MainContainer3:{
+      height: 40,
+      width: 40,
+      backgroundColor: 'white',
+      borderColor: 'white',
+      marginHorizontal:'10%'  
   }
-})
+});
