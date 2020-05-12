@@ -2,21 +2,67 @@
 // import 'firebase/auth';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
+
+
 export const logoutUser = () => {
   firebase.auth().signOut();
   console.log('user logged out');
 };
 
 
+var getRef = () => {
+  return firebase.database().ref();
+};
 
-export const signInUser = async ({name, email, password}) => {
+export const getUid = () => {
+return firebase.auth().currentUser.uid;
+};
+
+
+export const signInUser = async ({Name ,username, email, password}) => {
   try {
-    await firebase.auth().createUserWithEmailAndPassword(email, password);
-    // firebase.auth().currentUser.updateProfile({
-    //   displayName: name,
-    // });
-    console.log(email);
-    return {};
+   getRef().child("UserIDs/").orderByChild('username').equalTo(username).once("value").then(snapshot => {
+    if (snapshot.exists()) {
+    let userData = snapshot.val()
+    console.log(userData)
+    return userData;
+        } 
+else {
+    
+  console.log('not found');
+     
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(()=>
+      {
+
+      }).catch(() => {
+        Alert.alert('There was an error');
+       })
+      
+      let newUser = firebase.database().ref().child("/UserIDs").child(getUid).set({
+        Username: username,
+      }).then(() => console.log('Username attached to Id'))
+      console.log('Auto generated key', newUser);
+      console.log(Name);
+
+      //Combines Username node with UserId value
+      let newID = firebase.database().ref().child("/Usernames").child(username).set({
+        UserID: getUid,
+      }).then(() => console.log('New Id created'))
+      console.log('Auto generated key', newID);
+
+      let createUserAccount = firebase.database().ref().child("/Users").child(getUid).set({
+        Username: username,
+        Name: Name,
+        Email: email,
+        Photo: 'https://i.ytimg.com/vi/F-ptQ3wIuKw/hqdefault.jpg'
+      }).then(() => console.log('Account created'))
+      console.log('Auto generated key', createUserAccount);
+      }
+     });
+   
+    
+    return 'hello';
+    
   } catch (error) {
     console.log(error.code);
     switch (error.code) {
@@ -43,10 +89,6 @@ export const signInUser = async ({name, email, password}) => {
     }
   }
 };
-
-// passwordReset: email => {
-//   return firebase.auth().sendPasswordResetEmail(email)
-// },
 
 export const loginUser = async ({email, password}) => {
   try {
@@ -82,28 +124,6 @@ export const sendEmailWithPassword = async ({email}) => {
     console.log('Resetting password');
     console.log(email);
     await firebase.auth().sendPasswordResetEmail(email, null);
-
-    // var actionCodeSettings = {
-    //   url: 'https://maps-258321.firebaseapp.com/__/auth/action',
-    //   iOS: {
-    //     bundleId: 'com.example.ios'
-    //   },
-    //   android: {
-    //     packageName: 'com.example.android',
-    //     installApp: true,
-    //     minimumVersion: '12'
-    //   },
-    //   handleCodeInApp: true
-    // };
-    // firebase.auth().sendPasswordResetEmail(
-    //     'test@kishan.club', null)
-    //     .then(function() {
-    //       // Password reset email sent.
-    //     })
-    //     .catch(function(error) {
-    //       // Error occurred. Inspect error.code.
-    //     });
-
     return {};
   } catch (error) {
     switch (error.code) {

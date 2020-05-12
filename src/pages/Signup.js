@@ -9,11 +9,13 @@ import {
   Dimensions,
   Alert,
   TextField,
+  alert
 } from 'react-native';
 
 import Logo from '../components/Logo';
 import {emailValidator, passwordValidator, nameValidator} from '../core/utils';
 import {signInUser} from '../api/auth-api';
+
 
 //Feb 16, make sure you npm install react-native-animatable --save
 //import animateable library
@@ -32,6 +34,7 @@ export default class Signup extends Component {
     super(props);
     this.state = {
       username: '',
+      Name:'',
       email: '',
       password: '',
       fullName: '',
@@ -79,7 +82,8 @@ export default class Signup extends Component {
       this.state.loading = true;
 
       const response = await signInUser({
-        name: this.state.name,
+        Name: this.state.Name,
+        username:this.state.username,
         email: this.state.email,
         password: this.state.password,
       });
@@ -91,6 +95,7 @@ export default class Signup extends Component {
       } else {
         if (this._isMounted) {
           this.setState({error: '', ErrorStatus: false});
+          this.props.navigation.navigate('Map')
         }
       }
 
@@ -130,7 +135,7 @@ export default class Signup extends Component {
             placeholder="Username"
             placeholderTextColor="#C0C0C0"
             returnKeyType="next"
-            value={this.state.name}
+            value={this.state.username}
             onChangeText={username => this.setState({username})}
             // error={!!name.error}
             // errorText={name.error}
@@ -157,8 +162,8 @@ export default class Signup extends Component {
             selectionColor="#fff"
             keyboardType="email-address"
             returnKeyType="next"
-            value={this.state.fullName}
-            onChangeText={fullName => this.setState({fullName})}
+            value={this.state.Name}
+            onChangeText={Name => this.setState({Name})}
           />
 
           <TouchableOpacity style={styles.button} onPress={_onSignUpPressed}>

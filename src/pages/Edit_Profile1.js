@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {StyleSheet, Dimensions, Text, View, Image, TextInput, Button,TouchableOpacity, ImageBackground} from 'react-native';
-import {logoutUser} from '../api/auth-api';
+import {StyleSheet, Dimensions, Text, View, Image, TextInput, Button,TouchableOpacity, ImageBackground,Alert} from 'react-native';
+import {logoutUser,getUid} from '../api/auth-api';
+//import * as firebase from 'firebase'
 
 //Feb 16, make sure you npm install react-native-animatable --save
 //import animateable library
@@ -8,6 +9,9 @@ import * as Animateable from 'react-native-animatable'
 
 //Apr 6, imagepicker
 import ImagePicker from 'react-native-image-picker'
+import { firebase } from '@react-native-firebase/auth';
+import Firebase from '@react-native-firebase/app';
+import { text } from 'react-native-communications';
 //import storage from '@react-native-firebase/storage'
 
 export default class EditProfile1 extends Component {
@@ -15,7 +19,14 @@ export default class EditProfile1 extends Component {
     super(props);
     this.state = {
       avatarSource: require('../images/user.png'),
+      username: '',
+      currentPassword: '',
+      newPassword:'',
+      email:'',
+      name:''
     };
+    this.user = firebase.auth().currentUser;
+    this.uid = firebase.auth().currentUser.uid; 
   }
 
   selectFile = () => {
@@ -34,9 +45,7 @@ export default class EditProfile1 extends Component {
     };
 
     ImagePicker.showImagePicker(options, response => {
-      //console.log('Response = ', response);
-      //console.log('Response = ', response.uri);
-
+      
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -53,8 +62,59 @@ export default class EditProfile1 extends Component {
       }
     });
   };
-  //updateprofile(firstname,lastname, address, source.uri,)
+ 
+  get Ref() {
+    return firebase.database().ref('/Users');
+  };
+
+  componentDidMount =async () => {
+   let uid = firebase.auth().currentUser.uid;
+    firebase.database().ref('Users/' + uid).on('value', (snapshot) =>  {
+      if(snapshot.exists()){
+        console.log(snapshot);
+        this.setState({
+          email: snapshot.val().Email,
+          name: snapshot.val().Name,
+          username: snapshot.val().Username,
+        })
+      }else {
+        Alert.alert(uid);
+        Alert.alert('There was an error');
+      }
+    })
+  };
+
+
+//set current passwords state
+reauthenticate = (currentPassword) => {
+var user = firebase.auth().currentUser;
+var cred = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+return user.reauthenticateWithCredential(cred);
+};
+
+onChangePasswordPress = () =>{
+
+
+this.reauthenticate(this.state.currentPassword).then(() => {
+  
+  var user = firebase.auth().currentUser;
+
+user.updatePassword(this.state.newPassword).then(() => {
+   Alert.alert('Change was successful')
+}).catch(function(error) 
+  {
+    Alert.alert(error.message);
+  });
+
+}).catch((error) => {
+  Alert.alert('Password failed to update')
+});
+
+};
+
+
   render() {
+    
     return (
       <View style={styles.container}>
         <View style={styles.rectangle}>
@@ -73,45 +133,60 @@ export default class EditProfile1 extends Component {
           <TextInput
             style={styles.inputBox1}
             underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Jack"
+            placeholder={this.state.name}
             placeholderTextColor="#C0C0C0"
             selectionColor="#fff"
             keyboardType="default"
-            onSubmitEditing={() => this.password.focus()}
           />
           <Text style={styles.lastNameLB}>Username:</Text>
           <TextInput
             style={styles.inputBox2}
             underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="Robinson"
+            placeholder={this.state.username}
             placeholderTextColor="#C0C0C0"
             selectionColor="#fff"
             keyboardType="default"
-            onSubmitEditing={() => this.password.focus()}
           />
-          <Text style={styles.addressLB}>Password:</Text>
+          <Text style={styles.addressLB}>Current Password:</Text>
           <TextInput
             style={styles.inputBox3}
             underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder="*******."
+            placeholder=""
             placeholderTextColor="#C0C0C0"
             selectionColor="#fff"
             keyboardType="default"
-            onSubmitEditing={() => this.password.focus()}
+            autoCapitalize="none"
+            secureTextEntry={true}
+            value ={this.state.currentPassword}
+            onChangeText={(text) => {this.setState({currentPassword: text})}}
           />
-
+        <Text style={styles.addressLB}>New Password:</Text>
+          <TextInput
+            style={styles.inputBox3}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            placeholder=""
+            placeholderTextColor="#C0C0C0"
+            selectionColor="#fff"
+            keyboardType="default"
+            autoCapitalize="none"
+            secureTextEntry={true}
+            value ={this.state.newPassword}
+            onChangeText={(text) => {this.setState({newPassword: text})}}
+          />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.buttonStyle}
-            onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+            onPress={this.onChangePasswordPress}>
             <Text style={styles.updateText}>UPDATE PROFILE</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>  
         </View>
       </View>
     );
   }
-}
+};
+
+
 
 const styles = StyleSheet.create({
   container: {

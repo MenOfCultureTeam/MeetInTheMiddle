@@ -17,6 +17,11 @@ export default class Edit_Profile extends Component {
     super(props);
     this.state = {
       avatarSource: require('../images/user.png'),
+      username: '',
+      currentPassword: '',
+      newPassword:'',
+      email:'',
+      name:''
     };
   }
 
@@ -53,6 +58,27 @@ export default class Edit_Profile extends Component {
       }
     });
   };
+
+  componentDidMount =async () => {
+    let userID =  firebase.auth().currentUser.uid;
+    
+     firebase.database().ref('Users/').child('Y6mTq6EWhFO7ih34Krhj2UdLSv52').on('value', (snapshot) =>  {
+       if(snapshot.exists()){
+         console.log(snapshot);
+         this.setState({
+           email: snapshot.val().Email,
+           name: snapshot.val().Name,
+           username: snapshot.val().Username,
+         })
+       }else {
+         Alert.alert(userID);
+         Alert.alert('There was an error');
+       }
+       
+  // console.log(email);
+     })
+   };
+ 
   //updateprofile(firstname,lastname, address, source.uri,)
   render() {
     return (
