@@ -7,7 +7,6 @@ import Login from './src/pages/Login';
 import AuthLoadingScreen from './src/pages/AuthLoadingScreen';
 import Map from './src/pages/Map';
 import friendList from './src/pages/friendList';
-import addFriend from './src/pages/addFriend';
 import Edit_Profile from './src/pages/Edit_Profile';
 import Edit_Profile1 from './src/pages/Edit_Profile1';
 import Profile_Welcome from './src/pages/Profile_Welcome';
@@ -19,6 +18,7 @@ import {FlatListDemo} from "./src/pages/FlatListDemo";
 import Testpage from "./src/pages/Testpage"
 import Chatroom from "./src/pages/Chatroom"
 import ChatMenu from "./src/pages/ChatMenu"
+import AddFriends from './src/pages/AddFriends';
 // create our app's navigation stack
 export default createAppContainer(
   createSwitchNavigator(
@@ -28,7 +28,6 @@ export default createAppContainer(
       AuthLoadingScreen: AuthLoadingScreen,
       Map: Map,
       friendList: friendList,
-      addFriend: addFriend,
       Edit_Profile: Edit_Profile,
       Edit_Profile1: Edit_Profile1,
       Profile_Welcome: Profile_Welcome,
@@ -39,7 +38,8 @@ export default createAppContainer(
       Testpage: Testpage,
       FlatListDemo: FlatListDemo,
       Chatroom: Chatroom,
-      ChatMenu: ChatMenu
+      ChatMenu: ChatMenu,
+      AddFriends: AddFriends,
     },
     {
       initialRouteName: 'Map',

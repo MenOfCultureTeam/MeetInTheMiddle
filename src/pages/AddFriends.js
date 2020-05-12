@@ -4,7 +4,7 @@ import { ListItem, SearchBar } from 'react-native-elements';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 
-export class FlatListDemo extends Component {
+export class AddFriends extends Component {
   constructor(props) {
 
     super(props);
@@ -44,20 +44,21 @@ export class FlatListDemo extends Component {
     return await promise;
   }
 
-  setUserInfoItem = async (snap, contacts) => {
+  setUserInfoItem = async (snap,contacts) => {
     var items = []
-    let test = await snap.val();
+    let test = snap.val()
     // console.log(test);
     await Promise.all(Object.keys(test).map(async (key) => {
-      if(key in contacts){
-        let username = await this.readUserIDs(key);
-        let data = test[key];
+        if(!(key in contacts)){
+            let username = await this.readUserIDs(key);
+            let data = test[key];
+    
+            data.UserID=key;
+            data.Username=username.val().username;
+    
+            items.push(data);
+        }
 
-        data.UserID=key;
-        data.Username=username.val().username;
-
-        items.push(data);
-      }
     }))
 
     return items
@@ -65,7 +66,6 @@ export class FlatListDemo extends Component {
 
 
    makeRemoteRequest = async () => {
-
     let userids = await this.readUsers(this.uid);
     let contacts = userids.val().Contacts; //list of userids of your contacts
     var test=[]
@@ -141,14 +141,17 @@ export class FlatListDemo extends Component {
 
 
 
-
       <View style={{ flex: 1 }}>
 
-      <View style ={styles.topBar}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate("AddFriends")}>
-          <Image style={styles.returnIcon} source={require('../images/return.png')} />
-          </TouchableOpacity>
-      </View>
+          
+
+        <View style ={styles.topBar}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("AddFriends")}>
+            <Image style={styles.returnIcon} source={require('../images/return.png')} />
+            </TouchableOpacity>
+        </View>
+
+
         <FlatList
           data={this.state.data}
           renderItem={({ item }) => (
@@ -208,7 +211,14 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-
+    //Top Bar Container
+    topBar:{
+        elevation: 9,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        padding:10,
+        backgroundColor:'white'
+    },
   MainContainerMain: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -222,13 +232,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     marginHorizontal:'10%'  
   },
-  topBar:{
-    elevation: 9,
-    flexDirection:'row',
-    justifyContent:'space-between',
-    padding:10,
-    backgroundColor:'white'
-},
+
 
   MainContainer3:{
     height: 40,
