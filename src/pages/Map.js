@@ -337,7 +337,7 @@ export default class Map extends Component {
         }
         else{
           ////FlatListDemo
-          this.props.navigation.navigate('friendList')
+          this.props.navigation.navigate('FlatListDemo')
         }
     };
 
@@ -388,7 +388,7 @@ export default class Map extends Component {
         <View style={styles.rectangle}>
           <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('friendList')}>
+              <TouchableOpacity onPress={chatRoom}>
                 <Image
                   source={require('../images/Message.png')}
                   style={{

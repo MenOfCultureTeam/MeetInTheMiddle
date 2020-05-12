@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity,Image, Dimensions } from 'react-native';
+import { View,Dimensions, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity,Image } from 'react-native';
 import { ListItem, SearchBar } from 'react-native-elements';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 
-export class FlatListDemo extends Component {
+export class AddFriends extends Component {
   constructor(props) {
 
     super(props);
@@ -44,43 +44,66 @@ export class FlatListDemo extends Component {
     return await promise;
   }
 
-  setUserInfoItem = async (snap, contacts) => {
+  readAllUserIDs = async () => {
+    let promise = this.getRef().child("UserIDs/").once("value")
+    return await promise;
+  }
+  setAllUserInfoItemIgnoreContacts = async (snap,contacts) => {
     var items = []
-    let test = await snap.val();
-    // console.log(test);
-    await Promise.all(Object.keys(test).map(async (key) => {
-      if(key in contacts){
-        let username = await this.readUserIDs(key);
-        let data = test[key];
-
-        data.UserID=key;
-        data.Username=username.val().Username;
-
-        items.push(data);
-      }
+    let users = snap.val()
+    await Promise.all(Object.keys(users).map(async (key) => {
+        if(!(key in contacts) && key!=this.uid){
+            let username = await this.readUserIDs(key);
+            let data = users[key];
+            data.UserID=key;
+            data.Username=username.val().Username;
+            items.push(data);
+        }
     }))
+    return items
+  }
+  setAllUserInfoItem = async (snap) => {
+    var items = []
+    let users = snap.val()
+    await Promise.all(Object.keys(users).map(async (key) => {
+          if(key != this.uid){
+            let username = await this.readUserIDs(key);
+            let data = users[key];
+            console.log(data);
+            data.UserID=key;
+            data.Username=username.val().Username;
+            items.push(data);
+          }
 
+    }))
     return items
   }
 
-
    makeRemoteRequest = async () => {
-
     let userids = await this.readUsers(this.uid);
+
     let contacts = userids.val().Contacts; //list of userids of your contacts
     var test=[]
     if(contacts!=null){
       this.setState({ loading: true });
       const snapshot = await this.readDatabase();
-      test = await this.setUserInfoItem(snapshot, contacts);
+      test = await this.setAllUserInfoItemIgnoreContacts(snapshot, contacts);
       // console.log(test);
       this.setState({data:test,
                     error: null,
                     loading: false,})
       this.arrayholder = test;  
     }
-
-
+    else{
+      this.setState({ loading: true });
+      const snapshot = await this.readDatabase();
+      test = await this.setAllUserInfoItem(snapshot);
+      // console.log(test);
+      this.setState({data:test,
+                    error: null,
+                    loading: false,})
+      this.arrayholder = test;  
+    }
   };
 
   renderSeparator = () => {
@@ -138,37 +161,37 @@ export class FlatListDemo extends Component {
       );
     }
     return (
-      <View style={styles.container}>
-            <View style ={styles.topBar}>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Map')}>
-                <Image style={styles.returnIcon} source={require('../images/return.png')} />
+
+
+
+      <View style={{ flex: 1 }}>
+
+          
+
+        <View style ={styles.topBar}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("FlatListDemo")}>
+            <Image style={styles.returnIcon} source={require('../images/return.png')} />
             </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('AddFriends')}>
-                <Image style={styles.settingIcon} source={require('../images/editIcon.png')} />
-            </TouchableOpacity>
-        </View>
-        
-    
-          <FlatList
-            data={this.state.data}
-            renderItem={({ item }) => (
-              <ListItem
-                leftAvatar={{ source: { uri: item.Photo } }}
-                title={item.Username}
-                subtitle={`${item.Name}`}
-                onPress={() => this.props.navigation.navigate('Chatroom', {room:this.generateChatId(item.UserID),
-                  username:this.state.name,
-                  recipients:[this.uid,item.UserID], friend:item.Name, frienduid:item.UserID})}
-              />
-            )}
-            keyExtractor={item => item.UserID}
-            ItemSeparatorComponent={this.renderSeparator}
-            ListHeaderComponent={this.renderHeader}
-          />
-        <View style={styles.editContent}>
         </View>
 
+
+        <FlatList
+          data={this.state.data}
+          renderItem={({ item }) => (
+            <ListItem
+              leftAvatar={{ source: { uri: item.Photo } }}
+              title={item.Username}
+              subtitle={`${item.Name}`}
+              onPress={() => this.props.navigation.navigate('Chatroom', {room:this.generateChatId(item.UserID),
+                username:this.state.name,
+                recipients:[this.uid,item.UserID], friend:item.Name, frienduid:item.UserID})}
+            />
+          )}
+          keyExtractor={item => item.UserID}
+          ItemSeparatorComponent={this.renderSeparator}
+          ListHeaderComponent={this.renderHeader}
+        />
+        
         <View style={styles.rectangle}>
             <View style={styles.MainContainerMain}>
                 <View style={styles.MainContainer}>
@@ -211,14 +234,11 @@ export class FlatListDemo extends Component {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
-      </View>
-
-   
+          </View>
+        </View>      
     );
   }
 }
-
 const styles = StyleSheet.create({
   //Main Container
   container: {

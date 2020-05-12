@@ -20,8 +20,6 @@ export default class ChatMenu extends Component{
     };
     this.user=firebase.auth().currentUser;
     this.uid=this.user.uid;
-
-
     this.listenforitems = this.listenforitems.bind(this);
     
   }
@@ -33,6 +31,8 @@ export default class ChatMenu extends Component{
   getUsers(chatroomid){
     this.getRef().child("Users/").orderByChild()
   }
+  //TODO: Make object with data of chatrooms that contains usernames, userids
+  //look back at flatlistdemo and view how we changed to chatroom page by sending parameters of object data
   listenforitems(chatroomsref){
     chatroomsref.on("value", snap => {
         var items = [];
@@ -51,7 +51,6 @@ export default class ChatMenu extends Component{
       this.listenforitems(this.getRef().child("Users/"+this.uid+"/Rooms"));
       console.log(this.uid);
     })
-
   }
   render() {
 
@@ -73,8 +72,9 @@ export default class ChatMenu extends Component{
                       title={`${item}`}
                       bottomDivider
                       chevron 
-                      onPress={() => this.props.navigation.navigate('Chatroom', {room:item,
-                                                                                 username:this.state.name})}/>
+                      onPress={() => this.props.navigation.navigate('Chatroom', {room:this.generateChatId(item.UserID),
+                                                                                username:this.state.name,
+                                                                                recipients:[this.uid,item.UserID],friend:item.UserID})}/>
                               )}
                       />
         </View>
@@ -83,7 +83,7 @@ export default class ChatMenu extends Component{
             <View style={styles.MainContainerMain}>
                 <View style={styles.MainContainer}>
                     <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('friendList')}>
+                    onPress={() => this.props.navigation.navigate('FlatListDemo')}>
                         <Image
                             source={require('../images/Message.png')}
                             style={{
