@@ -18,7 +18,7 @@ import {FlatListDemo} from "./src/pages/FlatListDemo";
 import Testpage from "./src/pages/Testpage"
 import Chatroom from "./src/pages/Chatroom"
 import ChatMenu from "./src/pages/ChatMenu"
-import AddFriends from './src/pages/AddFriends';
+import {AddFriends} from './src/pages/AddFriends';
 // create our app's navigation stack
 export default createAppContainer(
   createSwitchNavigator(

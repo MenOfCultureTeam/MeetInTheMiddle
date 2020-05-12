@@ -8,7 +8,7 @@ import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
 
 
-var uid, room, username, recipientsIDs;
+var uid, room, username, recipientsIDs, friend, frienduid;
 
 export default class Chatroom extends Component{
 
@@ -24,13 +24,16 @@ export default class Chatroom extends Component{
     const { params } = this.props.navigation.state;
     room=params.room;
     username=params.username;
-    recipientsIDs=params.recipients;
+    recipientsIDs=params.recipients; //recipients would be used to implement group chat in future
+
+    friend=params.friend;
+    frienduid=params.frienduid;
     // console.log("Room:"+ room+", username: "+username);
     uid=firebase.auth().currentUser.uid;
 
     // console.log("User:" + this.user.uid);
     this.getRef().child("UserIDs/"+uid).once("value",snap=>{
-      this.setState({name:snap.val().username});
+      this.setState({name:snap.val().Username});
     })
 
     
@@ -68,10 +71,9 @@ export default class Chatroom extends Component{
     this.setState({loading: true});
     await Promise.all(recipientsIDs.map(async data => {
                 let name = await this.readUserIDs(data);
-                recep[name.val().username]=data;
+                recep[name.val().Username]=data;
             }));
-    this.setState({recipients:recep,
-      loading: false});
+    this.setState({recipients:recep,loading: false});
   }
 
   parse = async snapshot => {
@@ -122,15 +124,18 @@ export default class Chatroom extends Component{
     }
   };
   createChatroomInUsers = async (recipients) => {
-
-    let chatroomname=""
-
-    recipients.forEach(id => {
-      chatroomname+=this.state.recipients[id]+" | ";
+    //creates chatroom name of you and your friend. Can be implemented as a group chat in the future.
+    await Promise.all(recipients.map(async id => {
       this.getRef().child("Users/"+id+"/Rooms/"+room).set({ associated:true});
-    });
-    this.getRef().child("Rooms/"+room).set({ "ChatroomName":chatroomname});
+    }));
 
+    //creates contacts for you and your new friend
+    this.getRef().child("Users/"+uid+"/Contacts/"+frienduid).set({ friend:true});
+    this.getRef().child("Users/"+frienduid+"/Contacts/"+uid).set({ friend:true});
+
+    if(!this.checkIfChatroomMade(room).exists){
+      this.getRef().child("Rooms/"+room).set({ "made":true});
+    }
   }
   append = message => {
     this.ref.push(message);
@@ -151,16 +156,16 @@ export default class Chatroom extends Component{
     return(
     <View style={styles.container}>
       <View style ={styles.topBar}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('friendList')}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('FlatListDemo')}>
           <Image style={styles.returnIcon} source={require('../images/return.png')} />
           </TouchableOpacity>
       </View>
     <View style={styles.editContent}>
 
     <View style={styles.usersContainer}>
-      <Text style={styles.UsersInChat}>Users: </Text>
+      <Text style={styles.UsersInChat}>Friend: {friend}</Text>
 
-      {Object.keys(this.state.recipients).map((item,i)=>( <Text style={styles.UsersInChat} key={i} > {item} </Text> )) }
+      {/* {Object.keys(this.state.recipients).map((item,i)=>( <Text style={styles.UsersInChat} key={i} > {item} </Text> )) } */}
     </View>
       
       {/* https://react-native-elements.github.io/react-native-elements/docs/listitem.html */}
@@ -179,7 +184,7 @@ export default class Chatroom extends Component{
         <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer}>
                 <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('friendList')}>
+                onPress={() => this.props.navigation.navigate('FlatListDemo')}>
                     <Image
                         source={require('../images/Message.png')}
                         style={{
@@ -228,9 +233,8 @@ export default class Chatroom extends Component{
     // this.isMounted=false;
     this.setRecipients();
     
-    if(!this.checkIfChatroomMade(room).exists){
-      this.createChatroomInUsers(recipientsIDs);
-    }
+    this.createChatroomInUsers(recipientsIDs);
+
 
 
 

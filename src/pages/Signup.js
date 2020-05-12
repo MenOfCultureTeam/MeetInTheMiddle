@@ -91,6 +91,7 @@ export default class Signup extends Component {
       } else {
         if (this._isMounted) {
           this.setState({error: '', ErrorStatus: false});
+          
         }
       }
 

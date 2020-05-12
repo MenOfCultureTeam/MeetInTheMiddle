@@ -74,7 +74,7 @@ export default class ChatMenu extends Component{
                       chevron 
                       onPress={() => this.props.navigation.navigate('Chatroom', {room:this.generateChatId(item.UserID),
                                                                                 username:this.state.name,
-                                                                                recipients:[this.uid,item.UserID]})}/>
+                                                                                recipients:[this.uid,item.UserID],friend:item.UserID})}/>
                               )}
                       />
         </View>
@@ -83,7 +83,7 @@ export default class ChatMenu extends Component{
             <View style={styles.MainContainerMain}>
                 <View style={styles.MainContainer}>
                     <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('friendList')}>
+                    onPress={() => this.props.navigation.navigate('FlatListDemo')}>
                         <Image
                             source={require('../images/Message.png')}
                             style={{

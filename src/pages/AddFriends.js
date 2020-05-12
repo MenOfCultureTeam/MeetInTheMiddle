@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity,Image } from 'react-native';
+import { View,Dimensions, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity,Image } from 'react-native';
 import { ListItem, SearchBar } from 'react-native-elements';
 import firebase from '@react-native-firebase/app';
 import '@react-native-firebase/auth';
@@ -44,43 +44,66 @@ export class AddFriends extends Component {
     return await promise;
   }
 
-  setUserInfoItem = async (snap,contacts) => {
+  readAllUserIDs = async () => {
+    let promise = this.getRef().child("UserIDs/").once("value")
+    return await promise;
+  }
+  setAllUserInfoItemIgnoreContacts = async (snap,contacts) => {
     var items = []
-    let test = snap.val()
-    // console.log(test);
-    await Promise.all(Object.keys(test).map(async (key) => {
-        if(!(key in contacts)){
+    let users = snap.val()
+    await Promise.all(Object.keys(users).map(async (key) => {
+        if(!(key in contacts) && key!=this.uid){
             let username = await this.readUserIDs(key);
-            let data = test[key];
-    
+            let data = users[key];
             data.UserID=key;
-            data.Username=username.val().username;
-    
+            data.Username=username.val().Username;
             items.push(data);
         }
+    }))
+    return items
+  }
+  setAllUserInfoItem = async (snap) => {
+    var items = []
+    let users = snap.val()
+    await Promise.all(Object.keys(users).map(async (key) => {
+          if(key != this.uid){
+            let username = await this.readUserIDs(key);
+            let data = users[key];
+            console.log(data);
+            data.UserID=key;
+            data.Username=username.val().Username;
+            items.push(data);
+          }
 
     }))
-
     return items
   }
 
-
    makeRemoteRequest = async () => {
     let userids = await this.readUsers(this.uid);
+
     let contacts = userids.val().Contacts; //list of userids of your contacts
     var test=[]
     if(contacts!=null){
       this.setState({ loading: true });
       const snapshot = await this.readDatabase();
-      test = await this.setUserInfoItem(snapshot, contacts);
+      test = await this.setAllUserInfoItemIgnoreContacts(snapshot, contacts);
       // console.log(test);
       this.setState({data:test,
                     error: null,
                     loading: false,})
       this.arrayholder = test;  
     }
-
-
+    else{
+      this.setState({ loading: true });
+      const snapshot = await this.readDatabase();
+      test = await this.setAllUserInfoItem(snapshot);
+      // console.log(test);
+      this.setState({data:test,
+                    error: null,
+                    loading: false,})
+      this.arrayholder = test;  
+    }
   };
 
   renderSeparator = () => {
@@ -102,7 +125,7 @@ export class AddFriends extends Component {
     });
 
     const newData = this.arrayholder.filter(item => {
-      const itemData = `${item.Username.toUpperCase()} ${item.FirstName.toUpperCase()} ${item.LastName.toUpperCase()}`;
+      const itemData = `${item.Username.toUpperCase()}`;
       const textData = text.toUpperCase();
 
       return itemData.indexOf(textData) > -1;
@@ -146,7 +169,7 @@ export class AddFriends extends Component {
           
 
         <View style ={styles.topBar}>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("AddFriends")}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("FlatListDemo")}>
             <Image style={styles.returnIcon} source={require('../images/return.png')} />
             </TouchableOpacity>
         </View>
@@ -158,10 +181,10 @@ export class AddFriends extends Component {
             <ListItem
               leftAvatar={{ source: { uri: item.Photo } }}
               title={item.Username}
-              subtitle={`${item.FirstName} ${item.LastName}`}
+              subtitle={`${item.Name}`}
               onPress={() => this.props.navigation.navigate('Chatroom', {room:this.generateChatId(item.UserID),
                 username:this.state.name,
-                recipients:[this.uid,item.UserID]})}
+                recipients:[this.uid,item.UserID], friend:item.Name, frienduid:item.UserID})}
             />
           )}
           keyExtractor={item => item.UserID}
@@ -170,80 +193,110 @@ export class AddFriends extends Component {
         />
         
         <View style={styles.rectangle}>
-        <View style={styles.MainContainerMain}>
-            <View style={styles.MainContainer2}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Map')}>
-                <Image
-                  source={require('../images/Location.png')}
-                  style={{height: 40, width: 40}}
-                />
-              </TouchableOpacity>
-            </View>
+            <View style={styles.MainContainerMain}>
+                <View style={styles.MainContainer}>
+                    <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('FlatListDemo')}>
+                        <Image
+                            source={require('../images/Message.png')}
+                            style={{
+                            width: 40,
+                            height: 40,
+                            borderColor: 'black',
+                            borderRadius: 150 / 2,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
 
-            <View style={styles.MainContainer3}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('AddressInput')}>
-              <Image
-                source={require('../images/user.png')}
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderColor: 'black',
-                  borderRadius: 150 / 2,
-                }}
-              />
-              </TouchableOpacity>
-            </View>
+                <View style={styles.MainContainer2}>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+                        <Image
+                            source={require('../images/user.png')}
+                            style={{height: 40, width: 40}}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.MainContainer3}>
+                    <TouchableOpacity
+                        onPress={() => this.props.navigation.navigate('AddressInput')}>
+                        <Image
+                            source={require('../images/Location.png')}
+                            style={{
+                            width: 40,
+                            height: 40,
+                            borderColor: 'black',
+                            borderRadius: 150 / 2,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
           </View>
         </View>      
     );
   }
 }
-
 const styles = StyleSheet.create({
+  //Main Container
   container: {
-    // ...StyleSheet.absoluteFillObject,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+      flex: 1,
+      justifyContent:'space-between'
   },
-    //Top Bar Container
-    topBar:{
-        elevation: 9,
-        flexDirection:'row',
-        justifyContent:'space-between',
-        padding:10,
-        backgroundColor:'white'
-    },
+  //Top Bar Container
+  topBar:{
+      elevation: 9,
+      flexDirection:'row',
+      justifyContent:'space-between',
+      padding:10,
+      backgroundColor:'white'
+  },
+  returnIcon:{
+
+  },
+  // Content Container
+  editContent:{
+      width: '100%',
+      backgroundColor:'#FFFFFF'
+      },
+  // Footer Container
+  rectangle: {
+      elevation: 15,
+      height:60,
+      justifyContent: 'center',
+      width: Dimensions.get('window').width,
+      alignItems: 'center',
+      backgroundColor: 'white',
+      bottom:0,
+      borderColor: '#f5f5f5',
+      borderWidth: 2,
+  },
   MainContainerMain: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignContent: 'space-between',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignContent: 'space-between',
   },
-
+  MainContainer:{
+      height: 40,
+      width: 40,
+      backgroundColor: 'white',
+      borderColor: 'white',
+      marginHorizontal:'10%'     
+  },
   MainContainer2: {
-    height: 40,
-    width: 40,
-    backgroundColor: 'white',
-    borderColor: 'white',
-    marginHorizontal:'10%'  
+      height: 40,
+      width: 40,
+      backgroundColor: 'white',
+      borderColor: 'white',
+      marginHorizontal:'10%'  
   },
-
-
   MainContainer3:{
-    height: 40,
-    width: 40,
-    backgroundColor: 'white',
-    borderColor: 'white',
-    marginHorizontal:'10%'  
-  },
-
-
-
-
-
+      height: 40,
+      width: 40,
+      backgroundColor: 'white',
+      borderColor: 'white',
+      marginHorizontal:'10%'  
+  }
 });
