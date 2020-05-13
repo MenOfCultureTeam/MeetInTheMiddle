@@ -42,7 +42,7 @@ export default createAppContainer(
       AddFriends: AddFriends,
     },
     {
-      initialRouteName: 'Map',
+      initialRouteName: 'Signup',
     },
   ),
 );

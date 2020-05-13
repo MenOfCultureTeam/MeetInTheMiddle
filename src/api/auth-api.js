@@ -10,13 +10,17 @@ export const logoutUser = () => {
 };
 
 
-var getRef = () => {
+export var getRef = () => {
   return firebase.database().ref();
 };
 
-export const getUid = () => {
+export var getUid = () => {
 return firebase.auth().currentUser.uid;
 };
+
+export const getUser = () => {
+  return firebase.auth().currentUser;
+}
 
 
 export const signInUser = async ({Name ,username, email, password}) => {
@@ -30,34 +34,52 @@ export const signInUser = async ({Name ,username, email, password}) => {
 else {
     
   console.log('not found');
-     
-    firebase.auth().createUserWithEmailAndPassword(email, password).then(()=>
+
+
+      firebase.auth().createUserWithEmailAndPassword(email, password).then(()=>
       {
 
-      }).catch(() => {
-        Alert.alert('There was an error');
-       })
-      
-      let newUser = firebase.database().ref().child("/UserIDs").child(getUid).set({
-        Username: username,
+      let newUser = firebase.database().ref().child("/UserIDs").child(getUid()).set({
+       Username: username,
       }).then(() => console.log('Username attached to Id'))
       console.log('Auto generated key', newUser);
       console.log(Name);
 
-      //Combines Username node with UserId value
-      let newID = firebase.database().ref().child("/Usernames").child(username).set({
-        UserID: getUid,
-      }).then(() => console.log('New Id created'))
-      console.log('Auto generated key', newID);
 
-      let createUserAccount = firebase.database().ref().child("/Users").child(getUid).set({
-        Username: username,
-        Name: Name,
-        Email: email,
-        Photo: 'https://i.ytimg.com/vi/F-ptQ3wIuKw/hqdefault.jpg'
-      }).then(() => console.log('Account created'))
-      console.log('Auto generated key', createUserAccount);
+  //Combines Username node with UserId value
+  let newID = firebase.database().ref().child("/Usernames").child(username).set({
+    UserID: firebase.auth().currentUser.uid,
+  }).then(() => console.log('New Id created'))
+  console.log('Auto generated key', newID);
+
+
+  let createUserAccount = firebase.database().ref().child("/Users").child(firebase.auth().currentUser.uid).set({
+    Username: username,
+    Name: Name,
+    Email: email,
+    Photo: 'https://i.ytimg.com/vi/F-ptQ3wIuKw/hqdefault.jpg'
+  }).then(() => console.log('Account created'))
+  console.log('Auto generated key', createUserAccount);
+  console.log(getUid(), '        1');
+
+
+
+
+
+
+      }).catch(() => {
+        Alert.alert('There was an error');
+       })
+    
+      
+
+    
+
+     
       }
+
+      
+
      });
    
     
@@ -93,6 +115,7 @@ else {
 export const loginUser = async ({email, password}) => {
   try {
     await firebase.auth().signInWithEmailAndPassword(email, password);
+    console.log(getUid(), '        2');
     console.log('logging in');
     return {};
   } catch (error) {
@@ -147,5 +170,3 @@ export const sendEmailWithPassword = async ({email}) => {
   }
 
 };
-
-

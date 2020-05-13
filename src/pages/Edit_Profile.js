@@ -8,7 +8,8 @@ import * as Animateable from 'react-native-animatable';
 
 //Apr 6, imagepicker
 import ImagePicker from 'react-native-image-picker';
-
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
 import Video from 'react-native-video';
 //import storage from '@react-native-firebase/storage'
 
@@ -23,6 +24,8 @@ export default class Edit_Profile extends Component {
       email:'',
       name:''
     };
+    this.user=firebase.auth().currentUser;
+    this.uid=this.user.uid; 
   }
 
   selectFile = () => {
@@ -59,25 +62,44 @@ export default class Edit_Profile extends Component {
     });
   };
 
-  componentDidMount =async () => {
-    let userID =  firebase.auth().currentUser.uid;
-    
-     firebase.database().ref('Users/').child('Y6mTq6EWhFO7ih34Krhj2UdLSv52').on('value', (snapshot) =>  {
-       if(snapshot.exists()){
-         console.log(snapshot);
-         this.setState({
-           email: snapshot.val().Email,
-           name: snapshot.val().Name,
-           username: snapshot.val().Username,
-         })
-       }else {
-         Alert.alert(userID);
-         Alert.alert('There was an error');
-       }
-       
-  // console.log(email);
-     })
-   };
+  getRef() {
+    return firebase.database().ref();
+  }
+
+  readDatabase = async () => {
+    let promise = this.getRef().child("Users/").once("value")
+    return await promise;
+  }
+
+
+  readUserIDs = async (userid) => {
+    let promise = this.getRef().child("UserIDs/"+userid).once("value")
+    return await promise;
+  }
+
+
+  readUsers = async (_id) => {
+    let promise = this.getRef().child("Users/"+_id).once("value")
+    return await promise;
+  }
+
+
+  componentDidMount = async () => {
+  
+    let users = await this.readUsers(this.uid);
+    console.log(this.uid);
+    console.log(users);
+    console.log(users.val().Username);
+
+    this.setState({
+      email: users.val().Email,
+      username: users.val().Username,
+      name: users.val().Name
+    })
+
+  };
+
+
  
   //updateprofile(firstname,lastname, address, source.uri,)
   render() {
@@ -103,7 +125,7 @@ export default class Edit_Profile extends Component {
             </TouchableOpacity>
           </View>
           <View style ={styles.userPicName}>
-            <Text style={styles.fullName}>EmailAddress</Text>
+    <Text style={styles.fullName}></Text>
             <Image style={styles.avatar} source ={this.state.avatarSource}/>
           </View>
         </View>
@@ -115,7 +137,7 @@ export default class Edit_Profile extends Component {
             <ImageBackground source={require('../images/fullNameIcon.png')} style={styles.fullNameIcon}>
             </ImageBackground>
             <Text></Text>
-            <Text style={styles.fullNameBox}>122</Text>
+            <Text style={styles.fullNameBox}>{this.state.name}</Text>
             <Text></Text>
           </Animateable.View>
           <Animateable.View
@@ -124,7 +146,7 @@ export default class Edit_Profile extends Component {
             <ImageBackground source={require('../images/usernameIcon.png')} style={styles.fullNameIcon}>
             </ImageBackground>
             <Text></Text>
-            <Text style={styles.usernameBox}>122</Text>
+            <Text style={styles.usernameBox}>{this.state.username}</Text>
             <Text></Text>
           </Animateable.View>
           <Animateable.View
@@ -133,7 +155,7 @@ export default class Edit_Profile extends Component {
             <ImageBackground source={require('../images/passwordIcon.png')} style={styles.passwordIcon}>
             </ImageBackground>
             <Text></Text>
-            <Text style={styles.passwordBox}>124</Text>
+    <Text style={styles.passwordBox}>{this.state.email}</Text>
             <Text></Text>
           </Animateable.View>
           <TouchableOpacity style ={styles.loggoutBtn} onPress={() => logoutUser()}>

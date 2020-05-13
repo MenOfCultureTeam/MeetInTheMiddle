@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Dimensions, Text, View, Image, TextInput, Button,TouchableOpacity, ImageBackground,Alert} from 'react-native';
-import {logoutUser,getUid} from '../api/auth-api';
+import {logoutUser,getUid,getRef,getUser } from '../api/auth-api';
 //import * as firebase from 'firebase'
 
 //Feb 16, make sure you npm install react-native-animatable --save
@@ -9,8 +9,8 @@ import * as Animateable from 'react-native-animatable'
 
 //Apr 6, imagepicker
 import ImagePicker from 'react-native-image-picker'
-import { firebase } from '@react-native-firebase/auth';
-import Firebase from '@react-native-firebase/app';
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
 import { text } from 'react-native-communications';
 //import storage from '@react-native-firebase/storage'
 
@@ -23,10 +23,11 @@ export default class EditProfile1 extends Component {
       currentPassword: '',
       newPassword:'',
       email:'',
+      uid:'',
       name:''
     };
-    this.user = firebase.auth().currentUser;
-    this.uid = firebase.auth().currentUser.uid; 
+    this.user = getUser();
+    this.uid = getUid(); 
   }
 
   selectFile = () => {
@@ -63,25 +64,38 @@ export default class EditProfile1 extends Component {
     });
   };
  
-  get Ref() {
-    return firebase.database().ref('/Users');
-  };
+  
 
-  componentDidMount =async () => {
-   let uid = firebase.auth().currentUser.uid;
-    firebase.database().ref('Users/' + uid).on('value', (snapshot) =>  {
-      if(snapshot.exists()){
-        console.log(snapshot);
-        this.setState({
-          email: snapshot.val().Email,
-          name: snapshot.val().Name,
-          username: snapshot.val().Username,
-        })
-      }else {
-        Alert.alert(uid);
-        Alert.alert('There was an error');
-      }
+  readDatabase = async () => {
+    let promise = getRef().child("Users/").once("value")
+    return await promise;
+  }
+
+
+  readUserIDs = async (userid) => {
+    let promise = getRef().child("UserIDs/"+userid).once("value")
+    return await promise;
+  }
+
+
+  readUsers = async (_id) => {
+    let promise = getRef().child("Users/"+_id).once("value")
+    return await promise;
+  }
+
+
+  componentDidMount = async () => {
+  
+    let users = await this.readUsers(this.uid);
+    console.log(this.uid);
+    console.log(users);
+    console.log(users.val().Username);
+
+    this.setState({
+      username: users.val().Username,
+      name: users.val().Name
     })
+
   };
 
 
