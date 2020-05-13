@@ -83,6 +83,13 @@ export default class EditProfile1 extends Component {
     return await promise;
   }
 
+  updateNames = async (userid) => {
+    let promise = getRef().child('Users/'+userid).update({
+      Name: this.state.name,
+      Username: this.state.username
+    });
+    return await promise;
+  }
 
   componentDidMount = async () => {
   
@@ -99,6 +106,7 @@ export default class EditProfile1 extends Component {
   };
 
 
+
 //set current passwords state
 reauthenticate = (currentPassword) => {
 var user = firebase.auth().currentUser;
@@ -107,6 +115,14 @@ return user.reauthenticateWithCredential(cred);
 };
 
 onChangePasswordPress = () =>{
+
+ this.updateNames(this.uid).then(() =>{
+ 
+Alert.alert('Update to name has been successful')
+
+ }).catch(function(error){
+  Alert.alert('Failed to upload names')
+ });
 
 
 this.reauthenticate(this.state.currentPassword).then(() => {
@@ -147,19 +163,24 @@ user.updatePassword(this.state.newPassword).then(() => {
           <TextInput
             style={styles.inputBox1}
             underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder={this.state.name}
+            placeholder=''
+            value={this.state.name}
             placeholderTextColor="#C0C0C0"
             selectionColor="#fff"
             keyboardType="default"
+            onChangeText={(text) => {this.setState({name: text})}}
+
           />
           <Text style={styles.lastNameLB}>Username:</Text>
           <TextInput
             style={styles.inputBox2}
             underlineColorAndroid="rgba(0,0,0,0)"
-            placeholder={this.state.username}
+            placeholder=''
+            value={this.state.username}
             placeholderTextColor="#C0C0C0"
             selectionColor="#fff"
             keyboardType="default"
+            onChangeText={(text) => {this.setState({username: text})}}
           />
           <Text style={styles.addressLB}>Current Password:</Text>
           <TextInput
