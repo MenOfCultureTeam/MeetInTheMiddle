@@ -20,7 +20,8 @@ import '@mapbox/polyline'
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 import { ScrollView } from 'react-native-gesture-handler';
-
+import firebase from '@react-native-firebase/app';
+import '@react-native-firebase/auth';
 let id = 0;
 let index = 0;
 const screen = Dimensions.get('window');
@@ -371,6 +372,51 @@ export default class Map extends Component {
   }
   
   render() {
+    //edit profile checker
+    const editProfile = async () =>
+    {
+        if (firebase.auth().currentUser==null) {
+          Alert.alert(
+            "Currently Not Signed in",
+            "Login to use this feature",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "Login", onPress: () => this.props.navigation.navigate('Login') }
+            ],
+            { cancelable: false }
+          );
+        }
+        else{
+          this.props.navigation.navigate('Edit_Profile')
+        }
+    };
+    const chatroom = async () =>
+    {
+        if (firebase.auth().currentUser==null) {
+          Alert.alert(
+            "Currently Not Signed in",
+            "Login to use this feature",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "Login", onPress: () => this.props.navigation.navigate('login') }
+            ],
+            { cancelable: false }
+          );
+        }
+        else{
+          ////FlatListDemo
+          this.props.navigation.navigate('FlatListDemo')
+        }
+    };
+
     return (
       <View style={styles.container}>
         <MapView
@@ -443,27 +489,27 @@ export default class Map extends Component {
         <View style={styles.rectangle}>
           <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer}>
-              <Image
-                source={require('../images/Message.png')}
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderColor: 'black',
-                  borderRadius: 150 / 2,
-                }}
-              />
+               <TouchableOpacity
+                onPress={chatroom}>
+                <Image
+                  source={require('../images/Message.png')}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderColor: 'black',
+                    borderRadius: 150 / 2}}
+                />
+              </TouchableOpacity>
             </View>
-
             <View style={styles.MainContainer2}>
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Edit_Profile')}>
+                onPress={editProfile}>
                 <Image
                   source={require('../images/user.png')}
                   style={{height: 40, width: 40}}
                 />
               </TouchableOpacity>
             </View>
-
             <View style={styles.MainContainer3}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('AddressInput')}>
