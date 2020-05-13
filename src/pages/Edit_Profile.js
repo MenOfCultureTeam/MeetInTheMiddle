@@ -166,7 +166,7 @@ export default class Edit_Profile extends Component {
         <View style={styles.rectangle}>
           <View style={styles.MainContainerMain}>
             <View style={styles.MainContainer}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('friendList')}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('FlatListDemo')}>
                 <Image
                   source={require('../images/Message.png')}
                   style={{

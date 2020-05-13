@@ -57,7 +57,7 @@ export default class ChatMenu extends Component{
     return (
       <View style={styles.container}>
             <View style ={styles.topBar}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('friendList')}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('FlatListDemo')}>
                 <Image style={styles.returnIcon} source={require('../images/return.png')} />
                 </TouchableOpacity>
             </View>
