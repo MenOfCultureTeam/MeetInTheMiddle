@@ -296,7 +296,7 @@ export default class Map extends Component {
   }
   
   render() {
-
+    //edit profile checker
     const editProfile = async () =>
     {
         if (firebase.auth().currentUser==null) {
